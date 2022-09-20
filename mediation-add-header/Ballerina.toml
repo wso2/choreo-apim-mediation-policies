@@ -1,0 +1,9 @@
+[package]
+org = "choreo"
+name = "mediation.add_header"
+version = "0.2.0"
+distribution = "2201.1.0"
+keywords=["choreo-apim-mediation-policy", "choreo-apim-mediation-inflow", "choreo-apim-mediation-outflow", "choreo-apim-mediation-faultflow"]
+
+[build-options]
+observabilityIncluded = true
