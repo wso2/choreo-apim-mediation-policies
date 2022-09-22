@@ -1,0 +1,18 @@
+[
+    {
+        "name": "mediation-add-header",
+        "version": "0.2.0"
+    },
+    {
+        "name": "mediation-json-to-xml",
+        "version": "0.2.0"
+    },
+    {
+        "name": "mediation-rewrite-resource-path",
+        "version": "0.2.0"
+    },
+    {
+        "name": "mediation-xml-to-json",
+        "version": "0.2.0"
+    }
+]
