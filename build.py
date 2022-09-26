@@ -61,8 +61,7 @@ def release():
             continue
 
         # Create and push Git tag
-        # 10 = len('mediation')
-        version_tag = f'{pkg["name"][10:]}-v{bal_toml["package"]["version"]}'
+        version_tag = f'{pkg["name"][10:]}-v{bal_toml["package"]["version"]}' # 10 = len('mediation')
         local_repo.git.tag(version_tag)
         local_repo.git.push('origin', version_tag)
 
