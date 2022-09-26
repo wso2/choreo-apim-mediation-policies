@@ -1,0 +1,29 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  release-build:
+    runs-on: ubuntu-latest
+    # container:
+    #   image: ballerina/ballerina:2201.1.1
+    #   options: --user root
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Install Ballerina
+        run: |
+          wget https://dist.ballerina.io/downloads/2201.1.1/ballerina-2201.1.1-swan-lake-linux-x64.deb
+          sudo dpkg -i ballerina-2201.1.1-swan-lake-linux-x64.deb
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Build Policies
+        env:
+          BAL_DEV_CENTRAL_TOKEN: ${{ secrets.BAL_DEV_CENTRAL_TOKEN }}
+          BAL_STAGE_CENTRAL_TOKEN: ${{ secrets.BAL_STAGE_CENTRAL_TOKEN }}
+          BAL_PROD_CENTRAL_TOKEN: ${{ secrets.BAL_PROD_CENTRAL_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python build.py release
