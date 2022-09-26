@@ -1,8 +1,8 @@
 [package]
 org = "choreo"
 name = "mediation.rewrite_resource_path"
-version = "0.2.0"
-distribution = "2201.1.0"
+version = "0.3.0"
+distribution = "2201.1.1"
 keywords=["choreo-apim-mediation-policy", "choreo-apim-mediation-inflow"]
 
 [build-options]
