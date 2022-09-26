@@ -14,8 +14,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Ballerina
         run: |
-          wget https://dist.ballerina.io/downloads/2201.1.1/ballerina-2201.1.1-swan-lake-linux-x64.deb
-          sudo dpkg -i ballerina-2201.1.1-swan-lake-linux-x64.deb
+          BAL_VERSION=2201.1.1
+          BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
+          wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
+          sudo dpkg -i $BAL_INSTALLER
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'

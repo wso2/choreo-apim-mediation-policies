@@ -6,19 +6,23 @@ on:
 jobs:
   release-build:
     runs-on: ubuntu-latest
-    # container:
-    #   image: ballerina/ballerina:2201.1.1
-    #   options: --user root
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Install Ballerina
         run: |
-          wget https://dist.ballerina.io/downloads/2201.1.1/ballerina-2201.1.1-swan-lake-linux-x64.deb
-          sudo dpkg -i ballerina-2201.1.1-swan-lake-linux-x64.deb
+          BAL_VERSION=2201.1.1
+          BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
+          wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
+          sudo dpkg -i $BAL_INSTALLER
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      - name: Install Python Dependencies
+        run: |
+          pip install toml
+          pip install semantic-version
+          pip install gitpython
+          pip install PyGithub
       - name: Build Policies
         env:
           BAL_DEV_CENTRAL_TOKEN: ${{ secrets.BAL_DEV_CENTRAL_TOKEN }}
