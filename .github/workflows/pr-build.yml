@@ -4,10 +4,10 @@ on:
   pull_request:
     branches:
       - main
+      - test
   workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: write-all
 
 jobs:
   pr-build:
@@ -32,6 +32,10 @@ jobs:
           pip install semantic-version
           pip install gitpython
           pip install PyGithub
+      - name: Test Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Build Policies
         env:
           BAL_DEV_CENTRAL_TOKEN: ${{ secrets.BAL_DEV_CENTRAL_TOKEN }}
@@ -39,4 +43,4 @@ jobs:
           BAL_PROD_CENTRAL_TOKEN: ${{ secrets.BAL_PROD_CENTRAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python build.py build
+          python build.py release
