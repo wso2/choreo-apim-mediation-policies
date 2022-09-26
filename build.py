@@ -40,7 +40,7 @@ def build():
 
 def release():
     local_repo = Repo('.')
-    gh_repo = Github(os.environ['GITHUB_TOKEN']).get_repo("pubudu91/choreo-apim-mediation-policies")
+    gh_repo = Github(os.environ['GITHUB_TOKEN']).get_repo("wso2/choreo-apim-mediation-policies")
     failed_projects = []
 
     for pkg in packages:
