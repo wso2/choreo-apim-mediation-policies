@@ -1,0 +1,33 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  release-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Ballerina
+        run: |
+          BAL_VERSION=2201.1.1
+          BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
+          wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
+          sudo dpkg -i $BAL_INSTALLER
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Python Dependencies
+        run: |
+          pip install toml
+          pip install semantic-version
+          pip install gitpython
+          pip install PyGithub
+      - name: Build Policies
+        env:
+          BAL_DEV_CENTRAL_TOKEN: ${{ secrets.BAL_DEV_CENTRAL_TOKEN }}
+          BAL_STAGE_CENTRAL_TOKEN: ${{ secrets.BAL_STAGE_CENTRAL_TOKEN }}
+          BAL_PROD_CENTRAL_TOKEN: ${{ secrets.BAL_PROD_CENTRAL_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python build.py release
