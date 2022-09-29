@@ -34,11 +34,3 @@ public function xmlToJsonOut(mediation:Context ctx, http:Request req, http:Respo
     res.setPayload(jsonPayload, mime:APPLICATION_JSON);
     return ();
 }
-
-@mediation:FaultFlow
-public function xmlToJsonFault(mediation:Context ctx, http:Request req, http:Response? res, http:Response errorRes, error e) returns http:Response|false|error|() {
-    xml xmlPayload = check errorRes.getXmlPayload();
-    json jsonPayload = check xmldata:toJson(xmlPayload);
-    errorRes.setPayload(jsonPayload, mime:APPLICATION_JSON);
-    return ();
-}
