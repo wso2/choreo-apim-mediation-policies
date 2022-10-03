@@ -36,6 +36,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch -c release-test
       - name: Build Policies
         env:
           BAL_DEV_CENTRAL_TOKEN: ${{ secrets.BAL_DEV_CENTRAL_TOKEN }}
