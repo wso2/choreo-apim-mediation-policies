@@ -6,7 +6,7 @@ public function testInFlowSingleInstance() {
     http:Request req = new;
     http:Response|false|error|() result = addHeader_In({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo", "FooIn");
     
-    if !(result is ()) {
+    if result !is () {
         test:assertFail("Expected '()', found " + (typeof result).toString());
     }
 
