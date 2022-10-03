@@ -1,0 +1,26 @@
+name: Publish RC to Central
+
+on:
+  workflow_dispatch:
+    inputs:
+      released-asset:
+        description: The URL of the bala file to be pushed
+        required: true
+    
+jobs:
+  release-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Ballerina
+        run: |
+          BAL_VERSION=2201.1.1
+          BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
+          wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
+          sudo dpkg -i $BAL_INSTALLER
+      - name: Publish bala to prod Central
+        env:
+          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BAL_PROD_CENTRAL_TOKEN }}
+        run: |
+          BALA_URL=${{ github.event.inputs.released-asset }}
+          wget $BALA_URL
+          bal push $(basename $BALA_URL)

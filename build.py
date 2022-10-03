@@ -149,7 +149,6 @@ def unset_central(central_kind):
 class BCentral(enum.Enum):
     DEV_CENTRAL = ['Dev Central', 'BALLERINA_DEV_CENTRAL', 'BAL_DEV_CENTRAL_TOKEN']
     STAGE_CENTRAL = ['Stage Central', 'BALLERINA_STAGE_CENTRAL', 'BAL_STAGE_CENTRAL_TOKEN']
-    PROD_CENTRAL = ['Prod Central', 'DUMMY_VAL', 'BAL_PROD_CENTRAL_TOKEN']
 
 
 if len(sys.argv) < 2:
