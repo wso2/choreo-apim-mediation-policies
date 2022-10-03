@@ -1,14 +1,9 @@
 name: PR Build
 
 on:
-  pull_request_target:
-    types:
-      - opened
-      - synchronize
-      - reopened
+  pull_request:
     branches:
       - main
-      - test
   workflow_dispatch:
 
 permissions: write-all
@@ -47,4 +42,4 @@ jobs:
           BAL_PROD_CENTRAL_TOKEN: ${{ secrets.BAL_PROD_CENTRAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python build.py release
+          python build.py build
