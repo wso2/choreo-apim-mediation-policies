@@ -1,4 +1,4 @@
-name: Release Build
+name: Release Candidate Build
 
 on:
   workflow_dispatch:
