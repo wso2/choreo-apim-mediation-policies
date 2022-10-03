@@ -30,7 +30,7 @@ public function jsonToXmlIn(mediation:Context ctx, http:Request req) returns htt
         return errResp;
     }
     
-    req.setXmlPayload(xmlPayload, mime:APPLICATION_XML);
+    req.setXmlPayload(xmlPayload);
     return ();
 }
 
