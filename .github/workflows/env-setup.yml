@@ -1,0 +1,32 @@
+name: Setup Environment
+
+on:
+  workflow_call:
+
+jobs:
+  setup-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Ballerina
+        run: |
+          BAL_VERSION=2201.1.1
+          BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
+          wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
+          sudo dpkg -i $BAL_INSTALLER
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Python Dependencies
+        run: |
+          pip install toml
+          pip install semantic-version
+          pip install gitpython
+          pip install PyGithub
+      - name: Test Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
