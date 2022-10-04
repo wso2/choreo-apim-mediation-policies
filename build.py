@@ -51,7 +51,7 @@ def build():
         raise ValueError(f'Failed to build the following projects: {failed_projects}')
 
 
-def release():
+def rc_build():
     local_repo = Repo('.')
     gh_repo = Github(os.environ['GITHUB_TOKEN']).get_repo("wso2/choreo-apim-mediation-policies")
     failed_projects = []
@@ -67,10 +67,13 @@ def release():
             continue
 
         pkg['version'] = bal_toml['package']['version']
-        exit_code_aggragate = build_and_push_to_central(pkg['name'], bal_toml)
+        exit_code = build_and_push_to_central(pkg['name'], bal_toml)
 
-        if exit_code_aggragate != 0:
+        if exit_code != 0:
             failed_projects.append(pkg['name'])
+            continue
+
+        if os.environ.get('BALLERINA_PROD_CENTRAL', 'false').casefold() == 'false':
             continue
 
         # Create and push Git tag
@@ -81,6 +84,9 @@ def release():
         # Create a GitHub release with the bala file attached
         gh_release = gh_repo.create_git_release(version_tag, f'{pkg["name"]} v{pkg["version"]} released!', '')
         gh_release.upload_asset(get_bala_path(pkg['name'], bal_toml))
+
+    if os.environ.get('BALLERINA_PROD_CENTRAL', 'false').casefold() == 'false':
+        return
 
     # Update and commit the changes in the versions of the packages
     json.dump(packages, open("packages.json", "w"), indent=4)
@@ -97,29 +103,25 @@ def release():
 #### Utils
 
 def build_and_push_to_central(project_name, bal_toml):
-    exit_code_aggragate = 0
+    print(f'Building \'{project_name}\'')
+    exit_code = os.system(f'bal pack {project_name}')
 
-    for central in (BCentral):
-        print(f'Building \'{project_name}\' using \'{central.value[0]}\'')
-        set_central(central.value[1], central.value[2])
-        exit_code = os.system(f'bal pack {project_name}')
+    if exit_code != 0:
+        print(f'Failed to build {project_name}')
+        return exit_code
 
-        if exit_code != 0:
-            print(f'Failed to build {project_name}')
-            unset_central(central.value[1])
-            exit_code_aggragate += 1
-            continue
+    if os.environ.get('BALLERINA_PROD_CENTRAL', 'false').casefold() == 'true':
+        return 0
 
-        # TODO: Remove --repository=local
-        exit_code = os.system(f'bal push --repository=local {get_bala_path(project_name, bal_toml)}')
-        unset_central(central.value[1])
+    # TODO: Remove --repository=local
+    exit_code = os.system(f'bal push --repository=local {get_bala_path(project_name, bal_toml)}')
 
-        # Not incrementing the exit_code_aggragate for this case since even if this fails, this is something we can
-        # easily re-try manually later on since the bala file gets attached as a release artifact.
-        if exit_code != 0:
-            print(f'Failed to push {project_name} to {central.value[0]}')
+    # Not incrementing the exit_code_aggragate for this case since even if this fails, this is something we can
+    # easily re-try manually later on since the bala file gets attached as a release artifact.
+    if exit_code != 0:
+        print(f'Failed to push {project_name} to Central')
 
-    return exit_code_aggragate
+    return 0
 
 
 def get_bala_path(project_name, bal_toml):
@@ -133,27 +135,12 @@ def derive_bala_name(bal_toml):
     return f'{org}-{pkg}-any-{ver}.bala'
 
 
-def set_central(central_kind, central_token_name):
-    os.environ[central_kind] = 'true'
-    os.environ['BALLERINA_CENTRAL_ACCESS_TOKEN'] = os.environ[central_token_name]
-
-
-def unset_central(central_kind):
-    os.unsetenv(central_kind)
-    os.unsetenv('BALLERINA_CENTRAL_ACCESS_TOKEN')
-
-
-class BCentral(enum.Enum):
-    DEV_CENTRAL = ['Dev Central', 'BALLERINA_DEV_CENTRAL', 'BAL_DEV_CENTRAL_TOKEN']
-    STAGE_CENTRAL = ['Stage Central', 'BALLERINA_STAGE_CENTRAL', 'BAL_STAGE_CENTRAL_TOKEN']
-
-
 if len(sys.argv) < 2:
     raise ValueError('Missing build kind argument')
 
 if sys.argv[1] == 'build':
     build()
 elif sys.argv[1] == 'release':
-    release()
+    rc_build()
 else:
     raise ValueError(f'Unrecognized build kind: {sys.argv[1]}')
