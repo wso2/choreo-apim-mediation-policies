@@ -82,6 +82,11 @@ jobs:
           pip install semantic-version
           pip install gitpython
           pip install PyGithub
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b release-$(git show --pretty=%H HEAD --no-patch)
       - name: Build Policies
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BAL_PROD_CENTRAL_TOKEN }}
