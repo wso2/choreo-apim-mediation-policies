@@ -40,15 +40,12 @@ def build():
             print(pkg['name'], 'is already in the latest version')
             continue
 
-        for central in (BCentral):
-            print(f'Building \'{pkg["name"]}\' using \'{central.value[0]}\'')
-            set_central(central.value[1], central.value[2])
-            exit_code = os.system(f'bal build {pkg["name"]}')
-            unset_central(central.value[1])
+        print(f'Building \'{pkg["name"]}\'')
+        exit_code = os.system(f'bal build {pkg["name"]}')
 
-            if exit_code != 0:
-                print(f'Failed to build {pkg["name"]}')
-                failed_projects.append(pkg['name'])
+        if exit_code != 0:
+            print(f'Failed to build {pkg["name"]}')
+            failed_projects.append(pkg['name'])
 
     if failed_projects:
         raise ValueError(f'Failed to build the following projects: {failed_projects}')
