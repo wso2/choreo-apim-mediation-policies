@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+permissions: write-all
+
 jobs:
   pr-build-on-dev-central:
     name: Build PR using Dev Central
@@ -29,17 +31,18 @@ jobs:
           pip install semantic-version
           pip install gitpython
           pip install PyGithub
-      - name: Test Git
+      - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch -c release-test
       - name: Build Policies
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BAL_DEV_CENTRAL_TOKEN }}
           BALLERINA_DEV_CENTRAL: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python build.py build
+          python build.py release
 
   pr-build-on-stage-central:
     name: Build PR using Stage Central
@@ -64,17 +67,18 @@ jobs:
           pip install semantic-version
           pip install gitpython
           pip install PyGithub
-      - name: Test Git
+      - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"  
+          git switch -c release-test
       - name: Build Policies
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BAL_STAGE_CENTRAL_TOKEN }}
           BALLERINA_STAGE_CENTRAL: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python build.py build
+          python build.py release
   
   pr-build-on-prod-central:
     name: Build PR using Prod Central
@@ -99,13 +103,15 @@ jobs:
           pip install semantic-version
           pip install gitpython
           pip install PyGithub
-      - name: Test Git
+      - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"  
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch -c release-test  
       - name: Build Policies
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BAL_PROD_CENTRAL_TOKEN }}
+          BALLERINA_PROD_CENTRAL: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python build.py build
+          python build.py release
