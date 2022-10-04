@@ -85,16 +85,14 @@ def rc_build():
         gh_release = gh_repo.create_git_release(version_tag, f'{pkg["name"]} v{pkg["version"]} released!', '')
         gh_release.upload_asset(get_bala_path(pkg['name'], bal_toml))
 
-    if os.environ.get('BALLERINA_PROD_CENTRAL', 'false').casefold() == 'false':
-        return
+    if os.environ.get('BALLERINA_PROD_CENTRAL', 'false').casefold() == 'true':
+        # Update and commit the changes in the versions of the packages
+        json.dump(packages, open("packages.json", "w"), indent=4)
 
-    # Update and commit the changes in the versions of the packages
-    json.dump(packages, open("packages.json", "w"), indent=4)
-
-    if local_repo.git.diff('packages.json'):
-        local_repo.git.add('packages.json')
-        local_repo.git.commit('-m', '[automated] Update packages.json')
-        local_repo.git.push('-f', 'origin', local_repo.git.branch('--show-current'))
+        if local_repo.git.diff('packages.json'):
+            local_repo.git.add('packages.json')
+            local_repo.git.commit('-m', '[automated] Update packages.json')
+            local_repo.git.push('-f', 'origin', local_repo.git.branch('--show-current'))
 
     if failed_projects:
         raise ValueError(f'Failed to build the following projects: {failed_projects}')
