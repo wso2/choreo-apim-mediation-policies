@@ -21,7 +21,7 @@ json originalPayload = {"name":"John Doe", "greeting":"Hello World!"};
 xml expPayload = xml `<root><name>John Doe</name><greeting>Hello World!</greeting></root>`;
 
 @test:Config {}
-public function testInFlowSingleInstance() {
+public function testRequestFlowSingleInstance() {
     http:Request req = new;
     req.setJsonPayload(originalPayload);
     http:Response|false|error|() result = jsonToXmlIn({httpMethod: "get", resourcePath: "/greet"}, req);
@@ -29,7 +29,7 @@ public function testInFlowSingleInstance() {
 }
 
 @test:Config {}
-public function testOutFlowSingleInstance() {
+public function testResponseFlowSingleInstance() {
     http:Response res = new;
     res.setJsonPayload(originalPayload);
     http:Response|false|error|() result = jsonToXmlOut({httpMethod: "get", resourcePath: "/greet"}, new, res);

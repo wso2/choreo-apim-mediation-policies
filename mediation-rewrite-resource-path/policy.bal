@@ -17,7 +17,7 @@
 import choreo/mediation;
 import ballerina/http;
 
-@mediation:InFlow
+@mediation:RequestFlow
 public function rewrite(mediation:Context ctx, http:Request req, string newPath) 
                                                                 returns http:Response|false|error|() {
     if newPath[0] == "/" {

@@ -19,7 +19,7 @@ import ballerina/xmldata;
 import ballerina/mime;
 import ballerina/http;
 
-@mediation:InFlow
+@mediation:RequestFlow
 public function jsonToXmlIn(mediation:Context ctx, http:Request req) returns http:Response|false|error|() {
     json jsonPayload = check req.getJsonPayload();
     xml? xmlPayload = check xmldata:fromJson(jsonPayload);
@@ -34,7 +34,7 @@ public function jsonToXmlIn(mediation:Context ctx, http:Request req) returns htt
     return ();
 }
 
-@mediation:OutFlow
+@mediation:ResponseFlow
 public function jsonToXmlOut(mediation:Context ctx, http:Request req, http:Response res) returns http:Response|false|error|() {
     json jsonPayload = check res.getJsonPayload();
     xml? xmlPayload = check xmldata:fromJson(jsonPayload);
