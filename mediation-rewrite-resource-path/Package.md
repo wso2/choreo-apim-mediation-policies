@@ -6,7 +6,7 @@ modify resource path of a request going through a proxy created in Choreo.
 ## Usage
 
 This will be available to select when attaching mediation policies to a proxy in Choreo. The following policy parameters are available:
-- `newPath`: the desired resource path to route to.  This policy is only applicable to the in-flow sequence.
+- `newPath`: the desired resource path to route to.  This policy is only applicable to the request flow sequence.
 
 While there's no restriction on adding this policy multiple times, it would not be useful to do so. The resource path given in the last instance of 
 this policy will be the one that'd be used.

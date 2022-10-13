@@ -18,7 +18,7 @@ import ballerina/http;
 import ballerina/test;
 
 @test:Config {}
-public function testInFlowSingleInstance() {
+public function testRequestFlowSingleInstance() {
     http:Request req = new;
     http:Response|false|error|() result = addHeader_In({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo", "FooIn");
     
@@ -36,7 +36,7 @@ public function testInFlowSingleInstance() {
 }
 
 @test:Config {}
-public function testOutFlowSingleInstance() {
+public function testResponseFlowSingleInstance() {
     http:Response res = new;
     http:Response|false|error|() result = addHeader_Out({httpMethod: "get", resourcePath: "/greet"}, new, res, "x-foo", "FooOut");
     assertResult(result, res.getHeaders("x-foo"), "FooOut");
@@ -50,7 +50,7 @@ public function testFaultFlowSingleInstance() {
 }
 
 @test:Config {}
-public function testInFlowMultipleInstances() {
+public function testRequestFlowMultipleInstances() {
     http:Request req = new;
     http:Response|false|error|() result = addHeader_In({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo", "FooIn1");
     assertResult(result, req.getHeaders("x-foo"), "FooIn1");

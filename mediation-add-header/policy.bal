@@ -17,14 +17,14 @@
 import choreo/mediation;
 import ballerina/http;
 
-@mediation:InFlow
+@mediation:RequestFlow
 public function addHeader_In(mediation:Context ctx, http:Request req, string name, string value)
                                                                 returns http:Response|false|error|() {
     req.addHeader(name, value);
     return ();
 }
 
-@mediation:OutFlow
+@mediation:ResponseFlow
 public function addHeader_Out(mediation:Context ctx, http:Request req, http:Response res, string name, string value)
                                                                                 returns http:Response|false|error|() {
     res.addHeader(name, value);

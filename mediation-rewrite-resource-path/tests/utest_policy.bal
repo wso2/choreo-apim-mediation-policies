@@ -19,14 +19,14 @@ import choreo/mediation;
 import ballerina/test;
 
 @test:Config {}
-public function testInFlowSingleInstance() {
+public function testRequestFlowSingleInstance() {
     mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet"};
     http:Response|false|error|() result = rewrite(ctx, new, "/new-greet");
     assertResult(result, ctx.resourcePath, "/new-greet");
 }
 
 @test:Config {}
-public function testInFlowMultipleInstance() {
+public function testRequestFlowMultipleInstance() {
     mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet"};
     http:Response|false|error|() result = rewrite(ctx, new, "/foo-greet");
     assertResult(result, ctx.resourcePath, "/foo-greet");
