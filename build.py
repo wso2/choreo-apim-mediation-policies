@@ -111,8 +111,7 @@ def build_and_push_to_central(project_name, bal_toml):
     if os.environ.get('BALLERINA_PROD_CENTRAL', 'false').casefold() == 'true':
         return 0
 
-    # TODO: Remove --repository=local
-    exit_code = os.system(f'bal push --repository=local {get_bala_path(project_name, bal_toml)}')
+    exit_code = os.system(f'bal push {get_bala_path(project_name, bal_toml)}')
 
     # Not incrementing the exit_code_aggragate for this case since even if this fails, this is something we can
     # easily re-try manually later on since the bala file gets attached as a release artifact.
