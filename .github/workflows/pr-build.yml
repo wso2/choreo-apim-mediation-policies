@@ -63,7 +63,7 @@ jobs:
           pip install PyGithub
       - name: Build Policies
         env:
-          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BAL_STAGE_CENTRAL_TOKEN }}
+          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BAL_STAGING_CENTRAL_TOKEN }}
           BALLERINA_STAGE_CENTRAL: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
