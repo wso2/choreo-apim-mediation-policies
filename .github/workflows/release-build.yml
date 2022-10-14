@@ -5,6 +5,9 @@ on:
     
 permissions: write-all
 
+env:
+  BAL_VERSION: 2201.2.1
+
 jobs:
   rc-build-on-dev-central:
     name: Build RC using Dev Central
@@ -13,7 +16,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install Ballerina
         run: |
-          BAL_VERSION=2201.1.1
           BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
           wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
           sudo dpkg -i $BAL_INSTALLER
@@ -41,7 +43,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install Ballerina
         run: |
-          BAL_VERSION=2201.1.1
           BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
           wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
           sudo dpkg -i $BAL_INSTALLER
@@ -69,7 +70,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install Ballerina
         run: |
-          BAL_VERSION=2201.1.1
           BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
           wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
           sudo dpkg -i $BAL_INSTALLER
