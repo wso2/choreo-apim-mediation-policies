@@ -1,0 +1,9 @@
+[package]
+org = "choreo"
+name = "mediation.remove_header"
+version = "0.1.0"
+distribution = "2201.2.1"
+keywords=["choreo-apim-mediation-policy", "choreo-apim-mediation-request-flow", "choreo-apim-mediation-response-flow", "choreo-apim-mediation-fault-flow"]
+
+[build-options]
+observabilityIncluded = true

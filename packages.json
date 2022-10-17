@@ -14,5 +14,9 @@
     {
         "name": "mediation-xml-to-json",
         "version": "0.3.0"
+    },
+    {
+        "name": "mediation-remove-header",
+        "version": "0.1.0"
     }
 ]
