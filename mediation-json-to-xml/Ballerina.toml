@@ -1,8 +1,8 @@
 [package]
 org = "choreo"
 name = "mediation.json_to_xml"
-version = "0.3.0"
-distribution = "2201.2.1"
+version = "0.2.1"
+distribution = "2201.1.2"
 keywords=["choreo-apim-mediation-policy", "choreo-apim-mediation-request-flow", "choreo-apim-mediation-response-flow"]
 
 [build-options]
