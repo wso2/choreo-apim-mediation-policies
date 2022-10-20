@@ -20,23 +20,30 @@ import ballerina/test;
 
 @test:Config {}
 public function testRequestFlowSingleInstance() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet"};
-    http:Response|false|error|() result = rewrite(ctx, new, "/new-greet");
+    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet", "pathParams": {}};
+    http:Response|false|error|() result = rewrite(ctx, new, "/new-greet", true);
     assertResult(result, ctx.resourcePath, "/new-greet");
 }
 
 @test:Config {}
 public function testRequestFlowMultipleInstance() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet"};
-    http:Response|false|error|() result = rewrite(ctx, new, "/foo-greet");
+    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet", "pathParams": {}};
+    http:Response|false|error|() result = rewrite(ctx, new, "/foo-greet", true);
     assertResult(result, ctx.resourcePath, "/foo-greet");
 
-    result = rewrite(ctx, new, "bar-greet");
+    result = rewrite(ctx, new, "bar-greet", true);
     assertResult(result, ctx.resourcePath, "/bar-greet");
 }
 
+@test:Config {}
+public function testPathParamResolution() {
+    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet/10", "pathParams": {"id": 10}};
+    http:Response|false|error|() result = rewrite(ctx, new, "/foo-greet/{id}", true);
+    assertResult(result, ctx.resourcePath, "/foo-greet/10");
+}
+
 function assertResult(http:Response|false|error|() result, string resourcePath, string expResourcePath) {
-    if !(result is ()) {
+    if result !is () {
         test:assertFail("Expected '()', found " + (typeof result).toString());
     }
 
