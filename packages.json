@@ -18,5 +18,9 @@
     {
         "name": "mediation-remove-header",
         "version": "0.1.0"
+    },
+    {
+        "name": "mediation-add-query-param",
+        "version": "0.0.0"
     }
 ]
