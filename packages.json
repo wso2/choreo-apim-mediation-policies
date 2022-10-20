@@ -22,5 +22,9 @@
     {
         "name": "mediation-add-query-param",
         "version": "0.0.0"
+    },
+    {
+        "name": "mediation-remove-query-param",
+        "version": "0.0.0"
     }
 ]
