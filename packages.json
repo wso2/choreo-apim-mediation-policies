@@ -26,5 +26,9 @@
     {
         "name": "mediation-remove-query-param",
         "version": "0.0.0"
+    },
+    {
+        "name": "mediation-log-message",
+        "version": "0.0.0"
     }
 ]

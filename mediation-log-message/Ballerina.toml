@@ -1,0 +1,9 @@
+[package]
+org = "choreo"
+name = "mediation.log_message"
+version = "0.2.0"
+distribution = "2201.2.1"
+keywords=["choreo-apim-mediation-policy", "choreo-apim-mediation-request-flow", "choreo-apim-mediation-response-flow", "choreo-apim-mediation-fault-flow"]
+
+[build-options]
+observabilityIncluded = true
