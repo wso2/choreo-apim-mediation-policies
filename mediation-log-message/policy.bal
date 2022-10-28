@@ -18,42 +18,122 @@ import choreo/mediation;
 import ballerina/log;
 import ballerina/http;
 
-@mediation:RequestFlow
-public function logRequestMessage(mediation:Context ctx, http:Request req)
-                                                                returns http:Response|false|error|() {
-    string|http:ClientError payload = req.getTextPayload();
+const HEADER_X_REQUEST_ID = "x-request-id";
+const FIELD_NAME_PAYLOAD = "payload";
+const FIELD_NAME_HEADERS = "headers";
+const ERR_MSG_MISSING_REQ_ID = "<request-id-unavailable>";
 
-    if payload is http:ClientError {
-        return error("Failed to log the request payload", payload);
+@mediation:RequestFlow
+public function logRequestMessage(mediation:Context ctx, http:Request req, boolean logBody, boolean logHeaders,
+                                    string excludedHeaders) returns http:Response|false|error|() {
+    LogRecord lRec = {
+        mediation\-flow: REQUEST,
+        request\-id: "",
+        http\-method: req.method,
+        resource\-path: ctx.resourcePath
+    };
+
+    if req.hasHeader(HEADER_X_REQUEST_ID) {
+        lRec.request\-id = checkpanic req.getHeader(HEADER_X_REQUEST_ID);
+    } else {
+        lRec.request\-id = ERR_MSG_MISSING_REQ_ID;
     }
 
-    log:printInfo(payload, direction = "request");
+    if logBody {
+        string|http:ClientError payload = req.getTextPayload();
+
+        if payload is http:ClientError {
+            return error("Failed to log the request payload", payload);
+        }
+
+        lRec[FIELD_NAME_PAYLOAD] = payload;
+    }
+
+    if logHeaders {
+        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, excludedHeaders);
+    }
+
+    log:printInfo("", (), (), lRec);
     return ();
 }
 
 @mediation:ResponseFlow
-public function logResponseMessage(mediation:Context ctx, http:Request req, http:Response res)
+public function logResponseMessage(mediation:Context ctx, http:Request req, http:Response res, boolean logBody,
+                                    boolean logHeaders, string excludedHeaders)
                                                                 returns http:Response|false|error|() {
-    string|http:ClientError payload = res.getTextPayload();
+    LogRecord lRec = {
+        mediation\-flow: RESPONSE,
+        request\-id: "",
+        http\-method: req.method,
+        resource\-path: ctx.resourcePath
+    };
 
-    if payload is http:ClientError {
-        return error("Failed to log the response payload", payload);
+    if res.hasHeader(HEADER_X_REQUEST_ID) {
+        lRec.request\-id = checkpanic res.getHeader(HEADER_X_REQUEST_ID);
+    } else {
+        lRec.request\-id = ERR_MSG_MISSING_REQ_ID;
     }
 
-    log:printInfo(payload, direction = "response");
+    if logBody {
+        string|http:ClientError payload = res.getTextPayload();
+
+        if payload is http:ClientError {
+            return error("Failed to log the response payload", payload);
+        }
+
+        lRec[FIELD_NAME_PAYLOAD] = payload;
+    }
+
+    if logHeaders {
+        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, excludedHeaders);
+    }
+
+    log:printInfo("", (), (), lRec);
     return ();
 }
 
 @mediation:FaultFlow
 public function logFaultMessage(mediation:Context ctx, http:Request req, http:Response? resp,
-                                    http:Response errFlowResp, error e)
+                                    http:Response errFlowResp, error e, boolean logBody, boolean logHeaders,
+                                        string excludedHeaders)
                                                                 returns http:Response|false|error|() {
-    string|http:ClientError payload = errFlowResp.getTextPayload();
+    LogRecord lRec = {
+        mediation\-flow: FAULT,
+        request\-id: "",
+        http\-method: req.method,
+        resource\-path: ctx.resourcePath
+    };
 
-    if payload is http:ClientError {
-        return error("Failed to log the fault-message payload", payload);
+    // Since the fault flow may be triggered by both the request flow and the response flow, we take the x-request-id
+    // header from the flow which triggered the fault flow (if the request flow triggered it, response will be nil)
+    if resp is () {
+        if req.hasHeader(HEADER_X_REQUEST_ID) {
+            lRec.request\-id = checkpanic req.getHeader(HEADER_X_REQUEST_ID);
+        } else {
+            lRec.request\-id = ERR_MSG_MISSING_REQ_ID;
+        }
+    } else {
+        if resp.hasHeader(HEADER_X_REQUEST_ID) {
+            lRec.request\-id = checkpanic resp.getHeader(HEADER_X_REQUEST_ID);
+        } else {
+            lRec.request\-id = ERR_MSG_MISSING_REQ_ID;
+        }
     }
 
-    log:printInfo(payload, direction = "fault");
+    if logBody {
+        string|http:ClientError payload = errFlowResp.getTextPayload();
+
+        if payload is http:ClientError {
+            return error("Failed to log the fault-message payload", payload);
+        }
+
+        lRec[FIELD_NAME_PAYLOAD] = payload;
+    }
+
+    if logHeaders {
+        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, excludedHeaders);
+    }
+
+    log:printInfo("", (), (), lRec);
     return ();
 }

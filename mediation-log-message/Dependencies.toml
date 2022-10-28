@@ -243,6 +243,9 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.string"}
 ]
+modules = [
+	{org = "ballerina", packageName = "regex", moduleName = "regex"}
+]
 
 [[package]]
 org = "ballerina"
@@ -296,6 +299,7 @@ version = "0.2.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "log"},
+	{org = "ballerina", name = "regex"},
 	{org = "ballerinai", name = "observe"},
 	{org = "choreo", name = "mediation"}
 ]
