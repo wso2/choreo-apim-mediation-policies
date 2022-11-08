@@ -296,7 +296,10 @@ modules = [
 [[package]]
 org = "choreo"
 name = "mediation"
-version = "0.6.1"
+version = "0.7.0"
+dependencies = [
+	{org = "ballerina", name = "regex"}
+]
 modules = [
 	{org = "choreo", packageName = "mediation", moduleName = "mediation"}
 ]

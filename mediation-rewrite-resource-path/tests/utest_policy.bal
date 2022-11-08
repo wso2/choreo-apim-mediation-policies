@@ -15,37 +15,38 @@
 // under the License.
 
 import ballerina/http;
-import choreo/mediation;
 import ballerina/test;
+import choreo/mediation;
 
 @test:Config {}
 public function testRequestFlowSingleInstance() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet", "pathParams": {}};
-    http:Response|false|error|() result = rewrite(ctx, new, "/new-greet", true);
-    assertResult(result, ctx.resourcePath, "/new-greet");
+    mediation:Context ctx = createContext("get", "/greet");
+    http:Response|false|error|() result = rewrite(ctx, new, "/new-greet");
+    assertResult(result, ctx.resourcePath().toString(), "/new-greet");
 }
 
 @test:Config {}
 public function testRequestFlowMultipleInstance() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet", "pathParams": {}};
-    http:Response|false|error|() result = rewrite(ctx, new, "/foo-greet", true);
-    assertResult(result, ctx.resourcePath, "/foo-greet");
+    mediation:Context ctx = createContext("get", "/greet");
+    http:Response|false|error|() result = rewrite(ctx, new, "/foo-greet");
+    assertResult(result, ctx.resourcePath().toString(), "/foo-greet");
 
-    result = rewrite(ctx, new, "bar-greet", true);
-    assertResult(result, ctx.resourcePath, "/bar-greet");
-}
-
-@test:Config {}
-public function testPathParamResolution() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet/10", "pathParams": {"id": 10}};
-    http:Response|false|error|() result = rewrite(ctx, new, "/foo-greet/{id}", true);
-    assertResult(result, ctx.resourcePath, "/foo-greet/10");
+    result = rewrite(ctx, new, "bar-greet");
+    assertResult(result, ctx.resourcePath().toString(), "/bar-greet");
 }
 
 function assertResult(http:Response|false|error|() result, string resourcePath, string expResourcePath) {
-    if result !is () {
+    if !(result is ()) {
         test:assertFail("Expected '()', found " + (typeof result).toString());
     }
 
     test:assertEquals(resourcePath, expResourcePath);
+}
+
+function createContext(string httpMethod, string resPath) returns mediation:Context {
+    mediation:ResourcePath originalPath = checkpanic mediation:createImmutableResourcePath(resPath);
+    mediation:Context originalCtx =
+                mediation:createImmutableMediationContext(httpMethod, originalPath.pathSegments(), {}, {});
+    mediation:ResourcePath mutableResPath = checkpanic mediation:createMutableResourcePath(resPath);
+    return mediation:createMutableMediationContext(originalCtx, mutableResPath.pathSegments(), {}, {});
 }
