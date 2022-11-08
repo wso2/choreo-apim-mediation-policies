@@ -16,15 +16,16 @@
 
 import ballerina/http;
 import ballerina/test;
+import choreo/mediation;
 
-json originalPayload = {"name":"John Doe", "greeting":"Hello World!"};
+json originalPayload = {"name": "John Doe", "greeting": "Hello World!"};
 xml expPayload = xml `<root><name>John Doe</name><greeting>Hello World!</greeting></root>`;
 
 @test:Config {}
 public function testRequestFlowSingleInstance() {
     http:Request req = new;
     req.setJsonPayload(originalPayload);
-    http:Response|false|error|() result = jsonToXmlIn({httpMethod: "get", resourcePath: "/greet"}, req);
+    http:Response|false|error|() result = jsonToXmlIn(createContext("get", "/greet"), req);
     assertResult(result, req.getXmlPayload(), expPayload);
 }
 
@@ -32,7 +33,7 @@ public function testRequestFlowSingleInstance() {
 public function testResponseFlowSingleInstance() {
     http:Response res = new;
     res.setJsonPayload(originalPayload);
-    http:Response|false|error|() result = jsonToXmlOut({httpMethod: "get", resourcePath: "/greet"}, new, res);
+    http:Response|false|error|() result = jsonToXmlOut(createContext("get", "/greet"), new, res);
     assertResult(result, res.getXmlPayload(), expPayload);
 }
 
@@ -46,4 +47,12 @@ function assertResult(http:Response|false|error|() result, xml|http:ClientError 
     }
 
     test:assertEquals(payload, expVal);
+}
+
+function createContext(string httpMethod, string resPath) returns mediation:Context {
+    mediation:ResourcePath originalPath = checkpanic mediation:createImmutableResourcePath(resPath);
+    mediation:Context originalCtx =
+                mediation:createImmutableMediationContext(httpMethod, originalPath.pathSegments(), {}, {});
+    mediation:ResourcePath mutableResPath = checkpanic mediation:createMutableResourcePath(resPath);
+    return mediation:createMutableMediationContext(originalCtx, mutableResPath.pathSegments(), {}, {});
 }
