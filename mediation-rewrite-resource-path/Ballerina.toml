@@ -2,7 +2,7 @@
 org = "choreo"
 name = "mediation.rewrite_resource_path"
 version = "0.4.0"
-distribution = "2201.2.1"
+distribution = "2201.2.3"
 keywords=["choreo-apim-mediation-policy", "choreo-apim-mediation-request-flow"]
 
 [build-options]

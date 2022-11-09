@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  BAL_VERSION: 2201.2.1
+  BAL_VERSION: 2201.2.3
 
 jobs:
   pr-build-on-dev-central:

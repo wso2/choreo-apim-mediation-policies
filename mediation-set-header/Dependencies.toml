@@ -62,7 +62,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "http"
-version = "2.4.0"
+version = "2.4.3"
 dependencies = [
 	{org = "ballerina", name = "auth"},
 	{org = "ballerina", name = "cache"},
@@ -206,7 +206,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "oauth2"
-version = "2.4.0"
+version = "2.4.1"
 dependencies = [
 	{org = "ballerina", name = "cache"},
 	{org = "ballerina", name = "crypto"},
@@ -293,7 +293,7 @@ modules = [
 [[package]]
 org = "choreo"
 name = "mediation"
-version = "0.6.0"
+version = "0.6.1"
 modules = [
 	{org = "choreo", packageName = "mediation", moduleName = "mediation"}
 ]
