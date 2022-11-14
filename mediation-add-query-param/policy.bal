@@ -18,15 +18,15 @@ import choreo/mediation;
 import ballerina/http;
 
 @mediation:RequestFlow
-public function addQueryParam(mediation:Context ctx, http:Request req, string name, string value)
+public function addQueryParam(mediation:Context ctx, http:Request req, string Parameter\ Name, string Parameter\ Value)
                                                                 returns http:Response|false|error|() {
     map<string[]> qParams = <map<string[]>>ctx["queryParams"];
 
-    if qParams.hasKey(name) {
-        qParams.get(name).push(value);
+    if qParams.hasKey(Parameter\ Name) {
+        qParams.get(Parameter\ Name).push(Parameter\ Value);
     } else {
-        string[] vals = [value];
-        qParams[name] = vals;
+        string[] vals = [Parameter\ Value];
+        qParams[Parameter\ Name] = vals;
     }
 
     return ();

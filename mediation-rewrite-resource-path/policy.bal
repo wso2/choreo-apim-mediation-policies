@@ -21,11 +21,11 @@ import ballerina/regex;
 const PATH_PARAM_PATTERN = "\\{[^\\{\\}\\n\\r\\t\\ ]+\\}";
 
 @mediation:RequestFlow
-public function rewrite(mediation:Context ctx, http:Request req, string newPath, boolean keepQueryParams)
+public function rewrite(mediation:Context ctx, http:Request req, string New\ Path, boolean Keep\ Query\ Parameters)
                                                                 returns http:Response|false|error|() {
-    string modifiedPath = check mapPathParams(<map<anydata>>ctx["pathParams"], newPath);
+    string modifiedPath = check mapPathParams(<map<anydata>>ctx["pathParams"], New\ Path);
 
-    if keepQueryParams {
+    if Keep\ Query\ Parameters {
         modifiedPath += buildQueryParams(req);
     }
 

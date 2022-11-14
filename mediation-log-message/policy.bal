@@ -24,8 +24,8 @@ const FIELD_NAME_HEADERS = "headers";
 const ERR_MSG_MISSING_REQ_ID = "<request-id-unavailable>";
 
 @mediation:RequestFlow
-public function logRequestMessage(mediation:Context ctx, http:Request req, boolean logBody, boolean logHeaders,
-                                    string excludedHeaders) returns http:Response|false|error|() {
+public function logRequestMessage(mediation:Context ctx, http:Request req, boolean Log\ Payload, boolean Log\ Headers,
+                                    string Excluded\ Headers) returns http:Response|false|error|() {
     LogRecord lRec = {
         mediation\-flow: REQUEST,
         request\-id: "",
@@ -39,7 +39,7 @@ public function logRequestMessage(mediation:Context ctx, http:Request req, boole
         lRec.request\-id = ERR_MSG_MISSING_REQ_ID;
     }
 
-    if logBody {
+    if Log\ Payload {
         string|http:ClientError payload = req.getTextPayload();
 
         if payload is http:ClientError {
@@ -49,8 +49,8 @@ public function logRequestMessage(mediation:Context ctx, http:Request req, boole
         lRec[FIELD_NAME_PAYLOAD] = payload;
     }
 
-    if logHeaders {
-        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, excludedHeaders);
+    if Log\ Headers {
+        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, Excluded\ Headers);
     }
 
     log:printInfo("", (), (), lRec);
@@ -58,8 +58,8 @@ public function logRequestMessage(mediation:Context ctx, http:Request req, boole
 }
 
 @mediation:ResponseFlow
-public function logResponseMessage(mediation:Context ctx, http:Request req, http:Response res, boolean logBody,
-                                    boolean logHeaders, string excludedHeaders)
+public function logResponseMessage(mediation:Context ctx, http:Request req, http:Response res, boolean Log\ Payload,
+                                    boolean Log\ Headers, string Excluded\ Headers)
                                                                 returns http:Response|false|error|() {
     LogRecord lRec = {
         mediation\-flow: RESPONSE,
@@ -74,7 +74,7 @@ public function logResponseMessage(mediation:Context ctx, http:Request req, http
         lRec.request\-id = ERR_MSG_MISSING_REQ_ID;
     }
 
-    if logBody {
+    if Log\ Payload {
         string|http:ClientError payload = res.getTextPayload();
 
         if payload is http:ClientError {
@@ -84,8 +84,8 @@ public function logResponseMessage(mediation:Context ctx, http:Request req, http
         lRec[FIELD_NAME_PAYLOAD] = payload;
     }
 
-    if logHeaders {
-        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, excludedHeaders);
+    if Log\ Headers {
+        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, Excluded\ Headers);
     }
 
     log:printInfo("", (), (), lRec);
@@ -94,8 +94,8 @@ public function logResponseMessage(mediation:Context ctx, http:Request req, http
 
 @mediation:FaultFlow
 public function logFaultMessage(mediation:Context ctx, http:Request req, http:Response? resp,
-                                    http:Response errFlowResp, error e, boolean logBody, boolean logHeaders,
-                                        string excludedHeaders)
+                                    http:Response errFlowResp, error e, boolean Log\ Payload, boolean Log\ Headers,
+                                        string Excluded\ Headers)
                                                                 returns http:Response|false|error|() {
     LogRecord lRec = {
         mediation\-flow: FAULT,
@@ -120,7 +120,7 @@ public function logFaultMessage(mediation:Context ctx, http:Request req, http:Re
         }
     }
 
-    if logBody {
+    if Log\ Payload {
         string|http:ClientError payload = errFlowResp.getTextPayload();
 
         if payload is http:ClientError {
@@ -130,8 +130,8 @@ public function logFaultMessage(mediation:Context ctx, http:Request req, http:Re
         lRec[FIELD_NAME_PAYLOAD] = payload;
     }
 
-    if logHeaders {
-        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, excludedHeaders);
+    if Log\ Headers {
+        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, Excluded\ Headers);
     }
 
     log:printInfo("", (), (), lRec);

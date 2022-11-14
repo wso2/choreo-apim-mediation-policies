@@ -18,22 +18,23 @@ import choreo/mediation;
 import ballerina/http;
 
 @mediation:RequestFlow
-public function removeHeaderRequestFlow(mediation:Context ctx, http:Request req, string name)
+public function removeHeaderRequestFlow(mediation:Context ctx, http:Request req, string Header\ Name)
                                                                 returns http:Response|false|error|() {
-    req.removeHeader(name);
+    req.removeHeader(Header\ Name);
     return ();
 }
 
 @mediation:ResponseFlow
-public function removeHeaderResponseFlow(mediation:Context ctx, http:Request req, http:Response res, string name)
-                                                                                returns http:Response|false|error|() {
-    res.removeHeader(name);
+public function removeHeaderResponseFlow(mediation:Context ctx, http:Request req, http:Response res, 
+                                            string Header\ Name) returns http:Response|false|error|() {
+    res.removeHeader(Header\ Name);
     return ();
 }
 
 @mediation:FaultFlow
 public function removeHeaderFaultFlow(mediation:Context ctx, http:Request req, http:Response? resp, http:Response 
-                                        errFlowResp, error e, string name) returns http:Response|false|error|() {
-    errFlowResp.removeHeader(name);
+                                        errFlowResp, error e, string Header\ Name) 
+                                                returns http:Response|false|error|() {
+    errFlowResp.removeHeader(Header\ Name);
     return ();
 }

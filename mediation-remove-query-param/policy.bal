@@ -18,9 +18,9 @@ import choreo/mediation;
 import ballerina/http;
 
 @mediation:RequestFlow
-public function removeQueryParam(mediation:Context ctx, http:Request req, string name)
+public function removeQueryParam(mediation:Context ctx, http:Request req, string Parameter\ Name)
                                                                 returns http:Response|false|error|() {
     map<string[]> qParams = <map<string[]>>ctx["queryParams"];
-    _ = qParams.removeIfHasKey(name);
+    _ = qParams.removeIfHasKey(Parameter\ Name);
     return ();
 }
