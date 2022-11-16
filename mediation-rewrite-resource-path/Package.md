@@ -1,7 +1,10 @@
-# Package Overview
+# Rewrite Resource Path
 
-This package contains the mediation policy "Rewrite Resource Path" which is available out of the box in Choreo. This policy provides the capability to 
-modify resource path of a request going through a proxy created in Choreo.
+## Overview
+
+The "Rewrite Resource Path" policy is available out-of-the-box in Choreo and provides the capability to modify the resource path segment 
+(i.e., the endpoint of the upstream API) of an HTTP request flowing through an HTTP proxy created in Choreo. The original resource path 
+will be replaced by the provided relative resource path.
 
 ## Usage
 

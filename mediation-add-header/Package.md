@@ -1,7 +1,10 @@
-# Package Overview
+# Add Header
 
-This package contains the mediation policy "Add Header" available out of the box in Choreo. This policy provides the capability to add 
-arbitrary headers to either the request or the response flowing through an HTTP proxy created in Choreo. 
+## Overview
+
+The "Add Header" policy is available out-of-the-box in Choreo and provides the capability to add arbitrary headers to either 
+the request or the response flowing through an HTTP proxy created in Choreo. Adding a header will append the specified value to the 
+list of values if the header already exists.
 
 ## Usage
 
