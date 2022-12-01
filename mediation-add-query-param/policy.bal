@@ -18,23 +18,16 @@ import choreo/mediation;
 import ballerina/http;
 
 @mediation:RequestFlow
-public function addHeader_In(mediation:Context ctx, http:Request req, string Header\ Name, string Header\ Value)
+public function addQueryParam(mediation:Context ctx, http:Request req, string Parameter\ Name, string Parameter\ Value)
                                                                 returns http:Response|false|error|() {
-    req.addHeader(Header\ Name, Header\ Value);
-    return ();
-}
+    map<string[]> qParams = <map<string[]>>ctx["queryParams"];
 
-@mediation:ResponseFlow
-public function addHeader_Out(mediation:Context ctx, http:Request req, http:Response res, string Header\ Name, 
-                                string Header\ Value) returns http:Response|false|error|() {
-    res.addHeader(Header\ Name, Header\ Value);
-    return ();
-}
+    if qParams.hasKey(Parameter\ Name) {
+        qParams.get(Parameter\ Name).push(Parameter\ Value);
+    } else {
+        string[] vals = [Parameter\ Value];
+        qParams[Parameter\ Name] = vals;
+    }
 
-@mediation:FaultFlow
-public function addHeader_Fault(mediation:Context ctx, http:Request req, http:Response? resp, 
-                                    http:Response errFlowResp, error e, string Header\ Name, 
-                                        string Header\ Value) returns http:Response|false|error|() {
-    errFlowResp.addHeader(Header\ Name, Header\ Value);
     return ();
 }

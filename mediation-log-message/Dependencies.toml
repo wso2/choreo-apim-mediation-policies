@@ -192,6 +192,9 @@ dependencies = [
 	{org = "ballerina", name = "lang.value"},
 	{org = "ballerina", name = "observe"}
 ]
+modules = [
+	{org = "ballerina", packageName = "log", moduleName = "log"}
+]
 
 [[package]]
 org = "ballerina"
@@ -240,6 +243,9 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.string"}
 ]
+modules = [
+	{org = "ballerina", packageName = "regex", moduleName = "regex"}
+]
 
 [[package]]
 org = "ballerina"
@@ -248,18 +254,6 @@ version = "2.2.2"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "time"}
-]
-
-[[package]]
-org = "ballerina"
-name = "test"
-version = "0.0.0"
-scope = "testOnly"
-dependencies = [
-	{org = "ballerina", name = "jballerina.java"}
-]
-modules = [
-	{org = "ballerina", packageName = "test", moduleName = "test"}
 ]
 
 [[package]]
@@ -300,16 +294,17 @@ modules = [
 
 [[package]]
 org = "choreo"
-name = "mediation.add_header"
-version = "0.3.1"
+name = "mediation.log_message"
+version = "0.2.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
-	{org = "ballerina", name = "test"},
+	{org = "ballerina", name = "log"},
+	{org = "ballerina", name = "regex"},
 	{org = "ballerinai", name = "observe"},
 	{org = "choreo", name = "mediation"}
 ]
 modules = [
-	{org = "choreo", packageName = "mediation.add_header", moduleName = "mediation.add_header"}
+	{org = "choreo", packageName = "mediation.log_message", moduleName = "mediation.log_message"}
 ]
 
 

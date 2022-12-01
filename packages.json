@@ -14,5 +14,25 @@
     {
         "name": "mediation-xml-to-json",
         "version": "0.3.0"
+    },
+    {
+        "name": "mediation-set-header",
+        "version": "0.0.0"
+    },
+    {
+        "name": "mediation-remove-header",
+        "version": "0.1.0"
+    },
+    {
+        "name": "mediation-add-query-param",
+        "version": "0.0.0"
+    },
+    {
+        "name": "mediation-remove-query-param",
+        "version": "0.0.0"
+    },
+    {
+        "name": "mediation-log-message",
+        "version": "0.0.0"
     }
 ]

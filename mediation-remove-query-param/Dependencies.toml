@@ -300,8 +300,8 @@ modules = [
 
 [[package]]
 org = "choreo"
-name = "mediation.add_header"
-version = "0.3.1"
+name = "mediation.remove_query_param"
+version = "0.2.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "test"},
@@ -309,7 +309,7 @@ dependencies = [
 	{org = "choreo", name = "mediation"}
 ]
 modules = [
-	{org = "choreo", packageName = "mediation.add_header", moduleName = "mediation.add_header"}
+	{org = "choreo", packageName = "mediation.remove_query_param", moduleName = "mediation.remove_query_param"}
 ]
 
 
