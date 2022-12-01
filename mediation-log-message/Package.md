@@ -1,4 +1,6 @@
-# Package Overview
+# Log Message
+
+## Overview
 
 This package contains the mediation policy "Log Message" available out of the box in Choreo. This policy provides the capability to 
 log the payload of a request/response flowing through an HTTP proxy created in Choreo. 
