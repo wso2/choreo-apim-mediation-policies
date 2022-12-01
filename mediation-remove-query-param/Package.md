@@ -1,4 +1,6 @@
-# Package Overview
+# Remove Query Parameter
+
+## Overview
 
 This package contains the mediation policy "Remove Query Param" which is available out of the box in Choreo. This policy provides the capability to remove specified query parameters from a request flowing through a proxy created in Choreo.
 

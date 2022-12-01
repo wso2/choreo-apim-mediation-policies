@@ -1,13 +1,14 @@
-# Package Overview
+# Set Header
 
+## Overview
 This package contains the mediation policy "Set Header" available out of the box in Choreo. This policy provides the capability to set 
 arbitrary headers to either the request or the response flowing through an HTTP proxy created in Choreo. 
 
 ## Usage
 
 This will be available to select when attaching mediation policies to a proxy in Choreo. The following policy parameters are available:
-- `name`: the header name
-- `value`: the header value
+- `Header Name`: the header name
+- `Header Value`: the header value
 
 The policy can be attached multiple times if multiple headers need to be set. Setting the same header multiple times will overwrite the 
 existing header value.
