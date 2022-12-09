@@ -16,12 +16,13 @@
 
 import ballerina/http;
 import ballerina/test;
+import choreo/mediation;
 
 @test:Config {}
 public function testRequestFlowSingleInstance() {
     http:Request req = new;
     req.addHeader("x-foo", "request-flow");
-    http:Response|false|error|() result = removeHeaderRequestFlow({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo");
+    http:Response|false|error|() result = removeHeaderRequestFlow(createContext("get", "/greet"), req, "x-foo");
     assertResult(result, req.getHeaders("x-foo"));
 }
 
@@ -29,14 +30,14 @@ public function testRequestFlowSingleInstance() {
 public function testResponseFlowSingleInstance() {
     http:Response res = new;
     res.addHeader("x-foo", "response-flow");
-    http:Response|false|error|() result = removeHeaderResponseFlow({httpMethod: "get", resourcePath: "/greet"}, new, res, "x-foo");
+    http:Response|false|error|() result = removeHeaderResponseFlow(createContext("get", "/greet"), new, res, "x-foo");
     assertResult(result, res.getHeaders("x-foo"));
 }
 
 @test:Config {}
 public function testFaultFlowSingleInstance() {
     http:Response errRes = new;
-    http:Response|false|error|() result = removeHeaderFaultFlow({httpMethod: "get", resourcePath: "/greet"}, new, (), errRes, error("Error"), "x-foo");
+    http:Response|false|error|() result = removeHeaderFaultFlow(createContext("get", "/greet"), new, (), errRes, error("Error"), "x-foo");
     assertResult(result, errRes.getHeaders("x-foo"));
 }
 
@@ -47,13 +48,13 @@ public function testRequestFlowMultipleInstances() {
     req.addHeader("x-foo", "request-h2");
     req.addHeader("x-bar", "request-h3");
     
-    http:Response|false|error|() result = removeHeaderRequestFlow({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo");
+    http:Response|false|error|() result = removeHeaderRequestFlow(createContext("get", "/greet"), req, "x-foo");
     assertResult(result, req.getHeaders("x-foo"));
 
-    result = removeHeaderRequestFlow({httpMethod: "get", resourcePath: "/greet"}, req, "x-bar");
+    result = removeHeaderRequestFlow(createContext("get", "/greet"), req, "x-bar");
     assertResult(result, req.getHeaders("x-bar"));
 
-    result = removeHeaderRequestFlow({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo");
+    result = removeHeaderRequestFlow(createContext("get", "/greet"), req, "x-foo");
     assertResult(result, req.getHeaders("x-foo"));
 }
 
@@ -65,4 +66,12 @@ function assertResult(http:Response|false|error|() result, string[]|http:HeaderN
     if headers is string[] {
         test:assertFail("Header 'x-foo' is present in the request");
     }
+}
+
+function createContext(string httpMethod, string resPath) returns mediation:Context {
+    mediation:ResourcePath originalPath = checkpanic mediation:createImmutableResourcePath(resPath);
+    mediation:Context originalCtx =
+                mediation:createImmutableMediationContext(httpMethod, originalPath.pathSegments(), {}, {});
+    mediation:ResourcePath mutableResPath = checkpanic mediation:createMutableResourcePath(resPath);
+    return mediation:createMutableMediationContext(originalCtx, mutableResPath.pathSegments(), {}, {});
 }

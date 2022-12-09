@@ -30,6 +30,7 @@ packages = json.load(open("./packages.json"))
 
 def build():
     failed_projects = []
+    count = 1
 
     for pkg in packages:
         bal_toml = toml.load(os.path.join(pkg['name'], 'Ballerina.toml'))
@@ -40,8 +41,9 @@ def build():
             print(pkg['name'], 'is already in the latest version')
             continue
 
-        print(f'Building \'{pkg["name"]}\'')
-        exit_code = os.system(f'bal build {pkg["name"]}')
+        print(f'{count} Building \'{pkg["name"]}\'')
+        count += 1
+        exit_code = os.system(f'bal test {pkg["name"]}')
 
         if exit_code != 0:
             print(f'Failed to build {pkg["name"]}')

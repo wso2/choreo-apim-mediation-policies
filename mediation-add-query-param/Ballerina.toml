@@ -1,7 +1,7 @@
 [package]
 org = "choreo"
 name = "mediation.add_query_param"
-version = "0.2.0"
+version = "0.3.0"
 distribution = "2201.2.3"
 keywords=["choreo-apim-mediation-policy", "choreo-apim-mediation-request-flow"]
 

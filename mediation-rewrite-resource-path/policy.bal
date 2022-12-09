@@ -18,9 +18,9 @@ import choreo/mediation;
 import ballerina/http;
 
 @mediation:RequestFlow
-public function rewrite(mediation:Context ctx, http:Request req, string newPath)
+public function rewrite(mediation:Context ctx, http:Request req, string New\ Path)
                                                                 returns http:Response|false|error|() {
-    mediation:ResourcePath mutableResourcePath = check mediation:createMutableResourcePath(newPath);
+    mediation:ResourcePath mutableResourcePath = check mediation:createMutableResourcePath(New\ Path);
     ctx.setResourcePath(mutableResourcePath);
     return ();
 }

@@ -20,20 +20,23 @@ import ballerina/test;
 
 @test:Config {}
 public function testRequestFlowSingleInstance() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet", "queryParams": <map<string[]>>{x: ["y"]}};
+    mediation:Context ctx = createContext("get", "/greet");
+    ctx.addQueryParam("x", "y");
     http:Response|false|error|() result = removeQueryParam(ctx, new, "x");
-    assertResult(result, ctx["queryParams"], {});
+    assertResult(result, ctx.queryParams(), {});
 }
 
 @test:Config {}
 public function testRequestFlowMultipleInstance() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet", 
-                                "queryParams": <map<string[]>>{arr: ["1", "2"], x: ["y"]}};
+    mediation:Context ctx = createContext("get", "/greet");
+    ctx.addQueryParam("arr", 1);
+    ctx.addQueryParam("arr", 2);
+    ctx.addQueryParam("x", "y");
     http:Response|false|error|() result = removeQueryParam(ctx, new, "arr");
-    assertResult(result, ctx["queryParams"], {x: ["y"]});
+    assertResult(result, ctx.queryParams(), {x: ["y"]});
 
     result = removeQueryParam(ctx, new, "x");
-    assertResult(result, ctx["queryParams"], {});
+    assertResult(result, ctx.queryParams(), {});
 }
 
 function assertResult(http:Response|false|error|() result, anydata qParamMap, map<string[]> expQParamMap) {
@@ -42,4 +45,12 @@ function assertResult(http:Response|false|error|() result, anydata qParamMap, ma
     }
 
     test:assertEquals(qParamMap, expQParamMap);
+}
+
+function createContext(string httpMethod, string resPath) returns mediation:Context {
+    mediation:ResourcePath originalPath = checkpanic mediation:createImmutableResourcePath(resPath);
+    mediation:Context originalCtx =
+                mediation:createImmutableMediationContext(httpMethod, originalPath.pathSegments(), {}, {});
+    mediation:ResourcePath mutableResPath = checkpanic mediation:createMutableResourcePath(resPath);
+    return mediation:createMutableMediationContext(originalCtx, mutableResPath.pathSegments(), {}, {});
 }
