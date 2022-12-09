@@ -30,7 +30,7 @@ public function logRequestMessage(mediation:Context ctx, http:Request req, boole
         mediation\-flow: REQUEST,
         request\-id: "",
         http\-method: req.method,
-        resource\-path: ctx.resourcePath
+        resource\-path: ctx.originalContext().resourcePath().toString()
     };
 
     if req.hasHeader(HEADER_X_REQUEST_ID) {
@@ -65,7 +65,7 @@ public function logResponseMessage(mediation:Context ctx, http:Request req, http
         mediation\-flow: RESPONSE,
         request\-id: "",
         http\-method: req.method,
-        resource\-path: ctx.resourcePath
+        resource\-path: ctx.originalContext().resourcePath().toString()
     };
 
     if res.hasHeader(HEADER_X_REQUEST_ID) {
@@ -101,7 +101,7 @@ public function logFaultMessage(mediation:Context ctx, http:Request req, http:Re
         mediation\-flow: FAULT,
         request\-id: "",
         http\-method: req.method,
-        resource\-path: ctx.resourcePath
+        resource\-path: ctx.originalContext().resourcePath().toString()
     };
 
     // Since the fault flow may be triggered by both the request flow and the response flow, we take the x-request-id

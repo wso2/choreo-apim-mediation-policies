@@ -16,12 +16,13 @@
 
 import ballerina/http;
 import ballerina/test;
+import choreo/mediation;
 
 @test:Config {}
 public function testRequestFlowSingleInstance() {
     http:Request req = new;
     req.setHeader("x-foo", "FooOriginal");
-    http:Response|false|error|() result = setHeaderInRequest({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo", "FooNew");
+    http:Response|false|error|() result = setHeaderInRequest(createContext("get", "/greet"), req, "x-foo", "FooNew");
     
     if result !is () {
         test:assertFail("Expected '()', found " + (typeof result).toString());
@@ -40,7 +41,7 @@ public function testRequestFlowSingleInstance() {
 public function testResponseFlowSingleInstance() {
     http:Response res = new;
     res.setHeader("x-foo", "FooOriginal");
-    http:Response|false|error|() result = setHeaderInResponse({httpMethod: "get", resourcePath: "/greet"}, new, res, "x-foo", "FooNew");
+    http:Response|false|error|() result = setHeaderInResponse(createContext("get", "/greet"), new, res, "x-foo", "FooNew");
     assertResult(result, res.getHeaders("x-foo"), "FooNew");
 }
 
@@ -48,20 +49,20 @@ public function testResponseFlowSingleInstance() {
 public function testFaultFlowSingleInstance() {
     http:Response errRes = new;
     errRes.setHeader("x-foo", "FooOriginal");
-    http:Response|false|error|() result = setHeaderInFaultResponse({httpMethod: "get", resourcePath: "/greet"}, new, (), errRes, error("Error"), "x-foo", "FooNew");
+    http:Response|false|error|() result = setHeaderInFaultResponse(createContext("get", "/greet"), new, (), errRes, error("Error"), "x-foo", "FooNew");
     assertResult(result, errRes.getHeaders("x-foo"), "FooNew");
 }
 
 @test:Config {}
 public function testRequestFlowMultipleInstances() {
     http:Request req = new;
-    http:Response|false|error|() result = setHeaderInRequest({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo", "FooIn1");
+    http:Response|false|error|() result = setHeaderInRequest(createContext("get", "/greet"), req, "x-foo", "FooIn1");
     assertResult(result, req.getHeaders("x-foo"), "FooIn1");
 
-    result = setHeaderInRequest({httpMethod: "get", resourcePath: "/greet"}, req, "x-bar", "BarIn");
+    result = setHeaderInRequest(createContext("get", "/greet"), req, "x-bar", "BarIn");
     assertResult(result, req.getHeaders("x-bar"), "BarIn");
     
-    result = setHeaderInRequest({httpMethod: "get", resourcePath: "/greet"}, req, "x-foo", "FooIn2");
+    result = setHeaderInRequest(createContext("get", "/greet"), req, "x-foo", "FooIn2");
     assertResult(result, req.getHeaders("x-foo"), "FooIn2");
 }
 
@@ -75,4 +76,12 @@ function assertResult(http:Response|false|error|() result, string[]|http:HeaderN
     }
 
     test:assertEquals(headers, expVal);
+}
+
+function createContext(string httpMethod, string resPath) returns mediation:Context {
+    mediation:ResourcePath originalPath = checkpanic mediation:createImmutableResourcePath(resPath);
+    mediation:Context originalCtx =
+                mediation:createImmutableMediationContext(httpMethod, originalPath.pathSegments(), {}, {});
+    mediation:ResourcePath mutableResPath = checkpanic mediation:createMutableResourcePath(resPath);
+    return mediation:createMutableMediationContext(originalCtx, mutableResPath.pathSegments(), {}, {});
 }

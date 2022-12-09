@@ -20,19 +20,19 @@ import ballerina/test;
 
 @test:Config {}
 public function testRequestFlowSingleInstance() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet", "queryParams": <map<string[]>>{}};
+    mediation:Context ctx = createContext("get", "/greet");
     http:Response|false|error|() result = addQueryParam(ctx, new, "x", "y");
-    assertResult(result, ctx["queryParams"], {x: ["y"]});
+    assertResult(result, ctx.queryParams(), {x: ["y"]});
 }
 
 @test:Config {}
 public function testRequestFlowMultipleInstance() {
-    mediation:Context ctx = {httpMethod: "get", resourcePath: "/greet", "queryParams": <map<string[]>>{}};
+    mediation:Context ctx = createContext("get", "/greet");
     http:Response|false|error|() result = addQueryParam(ctx, new, "arr", "1");
-    assertResult(result, ctx["queryParams"], {arr: ["1"]});
+    assertResult(result, ctx.queryParams(), {arr: ["1"]});
 
     result = addQueryParam(ctx, new, "arr", "2");
-    assertResult(result, ctx["queryParams"], {arr: ["1", "2"]});
+    assertResult(result, ctx.queryParams(), {arr: ["1", "2"]});
 }
 
 function assertResult(http:Response|false|error|() result, anydata qParamMap, map<string[]> expQParamMap) {
@@ -41,4 +41,12 @@ function assertResult(http:Response|false|error|() result, anydata qParamMap, ma
     }
 
     test:assertEquals(qParamMap, expQParamMap);
+}
+
+function createContext(string httpMethod, string resPath) returns mediation:Context {
+    mediation:ResourcePath originalPath = checkpanic mediation:createImmutableResourcePath(resPath);
+    mediation:Context originalCtx =
+                mediation:createImmutableMediationContext(httpMethod, originalPath.pathSegments(), {}, {});
+    mediation:ResourcePath mutableResPath = checkpanic mediation:createMutableResourcePath(resPath);
+    return mediation:createMutableMediationContext(originalCtx, mutableResPath.pathSegments(), {}, {});
 }
