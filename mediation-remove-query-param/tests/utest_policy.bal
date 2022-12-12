@@ -29,8 +29,8 @@ public function testRequestFlowSingleInstance() {
 @test:Config {}
 public function testRequestFlowMultipleInstance() {
     mediation:Context ctx = createContext("get", "/greet");
-    ctx.addQueryParam("arr", 1);
-    ctx.addQueryParam("arr", 2);
+    ctx.addQueryParam("arr", "1");
+    ctx.addQueryParam("arr", "2");
     ctx.addQueryParam("x", "y");
     http:Response|false|error|() result = removeQueryParam(ctx, new, "arr");
     assertResult(result, ctx.queryParams(), {x: ["y"]});
