@@ -2,8 +2,7 @@
 
 ## Overview
 
-This package contains the mediation policy "Remove Header" available out of the box in Choreo. This policy provides the capability to 
-remove headers from either the request or the response flowing through an HTTP proxy created in Choreo. 
+This policy provides the capability to remove headers from either the request or the response. 
 
 ## Usage
 

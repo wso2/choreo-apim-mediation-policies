@@ -2,9 +2,8 @@
 
 ## Overview
 
-The "Add Header" policy is available out-of-the-box in Choreo and provides the capability to add arbitrary headers to either 
-the request or the response flowing through an HTTP proxy created in Choreo. Adding a header will append the specified value to the 
-list of values if the header already exists.
+This policy provides the capability to add arbitrary headers to either the request or the response. 
+Adding the same header multiple times will not overwrite the existing header values and it will be appended to the list of values if the header already exists.
 
 ## Usage
 

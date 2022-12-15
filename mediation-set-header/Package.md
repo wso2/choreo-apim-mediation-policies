@@ -1,8 +1,7 @@
 # Set Header
 
 ## Overview
-This package contains the mediation policy "Set Header" available out of the box in Choreo. This policy provides the capability to set 
-arbitrary headers to either the request or the response flowing through an HTTP proxy created in Choreo. 
+This policy provides the capability to set arbitrary headers to either the request or the response. Setting the same header multiple times will overwrite the existing header value.
 
 ## Usage
 

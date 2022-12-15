@@ -1,9 +1,8 @@
-# Add Query Param
+# Add Query Parameter
 
 ## Overview
 
-This package contains the mediation policy "Add Query Param" which is available out of the box in Choreo. This policy provides the capability to add 
-additional query parameters to a request flowing through a proxy created in Choreo.
+This policy Provides the capability to add additional query parameters to a request.
 
 ## Usage
 
