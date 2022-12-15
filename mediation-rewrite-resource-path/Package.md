@@ -2,8 +2,8 @@
 
 ## Overview
 
-The "Rewrite Resource Path" policy is available out-of-the-box in Choreo and provides the capability to modify the resource path segment 
-(i.e., the endpoint of the upstream API) of an HTTP request flowing through an HTTP proxy created in Choreo. The original resource path 
+This policy provides the capability to modify the resource path segment 
+(i.e., the endpoint of the upstream API) of an HTTP request. The original resource path 
 will be replaced by the provided relative resource path.
 
 ## Usage
