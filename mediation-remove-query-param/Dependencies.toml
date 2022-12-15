@@ -304,7 +304,7 @@ modules = [
 [[package]]
 org = "choreo"
 name = "mediation.remove_query_param"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "test"},

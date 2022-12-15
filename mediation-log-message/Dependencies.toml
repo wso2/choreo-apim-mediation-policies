@@ -298,7 +298,7 @@ modules = [
 [[package]]
 org = "choreo"
 name = "mediation.log_message"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "log"},
