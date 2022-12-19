@@ -24,8 +24,8 @@ const FIELD_NAME_HEADERS = "headers";
 const ERR_MSG_MISSING_REQ_ID = "<request-id-unavailable>";
 
 @mediation:RequestFlow
-public function logRequestMessage(mediation:Context ctx, http:Request req, boolean Log\ Payload, boolean Log\ Headers,
-                                    string Excluded\ Headers) returns http:Response|false|error|() {
+public function logRequestMessage(mediation:Context ctx, http:Request req, boolean Log\ Payload = false, boolean Log\ Headers = false,
+                                    string Excluded\ Headers = "") returns http:Response|false|error|() {
     LogRecord lRec = {
         mediation\-flow: REQUEST,
         request\-id: "",
@@ -58,8 +58,8 @@ public function logRequestMessage(mediation:Context ctx, http:Request req, boole
 }
 
 @mediation:ResponseFlow
-public function logResponseMessage(mediation:Context ctx, http:Request req, http:Response res, boolean Log\ Payload,
-                                    boolean Log\ Headers, string Excluded\ Headers)
+public function logResponseMessage(mediation:Context ctx, http:Request req, http:Response res, boolean Log\ Payload = false,
+                                    boolean Log\ Headers = false, string Excluded\ Headers = "")
                                                                 returns http:Response|false|error|() {
     LogRecord lRec = {
         mediation\-flow: RESPONSE,
@@ -94,8 +94,8 @@ public function logResponseMessage(mediation:Context ctx, http:Request req, http
 
 @mediation:FaultFlow
 public function logFaultMessage(mediation:Context ctx, http:Request req, http:Response? resp,
-                                    http:Response errFlowResp, error e, boolean Log\ Payload, boolean Log\ Headers,
-                                        string Excluded\ Headers)
+                                    http:Response errFlowResp, error e, boolean Log\ Payload = false, boolean Log\ Headers = false,
+                                        string Excluded\ Headers = "")
                                                                 returns http:Response|false|error|() {
     LogRecord lRec = {
         mediation\-flow: FAULT,
