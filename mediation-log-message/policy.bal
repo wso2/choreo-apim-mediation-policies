@@ -43,10 +43,10 @@ public function logRequestMessage(mediation:Context ctx, http:Request req, boole
         string|http:ClientError payload = req.getTextPayload();
 
         if payload is http:ClientError {
-            return error("Failed to log the request payload", payload);
+            log:printWarn("Error while reading request payload", payload);
+        } else {
+            lRec[FIELD_NAME_PAYLOAD] = payload;
         }
-
-        lRec[FIELD_NAME_PAYLOAD] = payload;
     }
 
     if Log\ Headers {
@@ -78,10 +78,10 @@ public function logResponseMessage(mediation:Context ctx, http:Request req, http
         string|http:ClientError payload = res.getTextPayload();
 
         if payload is http:ClientError {
-            return error("Failed to log the response payload", payload);
+            log:printWarn("Error while reading response payload", payload);
+        } else {
+            lRec[FIELD_NAME_PAYLOAD] = payload;
         }
-
-        lRec[FIELD_NAME_PAYLOAD] = payload;
     }
 
     if Log\ Headers {
@@ -124,10 +124,10 @@ public function logFaultMessage(mediation:Context ctx, http:Request req, http:Re
         string|http:ClientError payload = errFlowResp.getTextPayload();
 
         if payload is http:ClientError {
-            return error("Failed to log the fault-message payload", payload);
+            log:printWarn("Error while reading fault payload", payload);
+        } else {
+             lRec[FIELD_NAME_PAYLOAD] = payload;
         }
-
-        lRec[FIELD_NAME_PAYLOAD] = payload;
     }
 
     if Log\ Headers {
