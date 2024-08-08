@@ -17,7 +17,7 @@
 import ballerina/http;
 import ballerina/regex;
 
-function buildHeadersMap(http:Request req, string excluded) returns map<string|string[]> {
+function buildRequestHeadersMap(http:Request req, string excluded) returns map<string|string[]> {
     map<string|string[]> headers = {};
     map<()> excludedHeaders = getHeaderNames(excluded); // using map<()> to in lieu of a set
 
@@ -30,6 +30,27 @@ function buildHeadersMap(http:Request req, string excluded) returns map<string|s
 
         if name.equalsIgnoreCaseAscii(http:AUTHORIZATION) {
             headers[name] = "***";
+            continue;
+        }
+
+        if values.length() == 1 {
+            headers[name] = values[0];
+        } else {
+            headers[name] = values;
+        }
+    }
+
+    return headers;
+}
+
+function buildResponseHeadersMap(http:Response res, string excluded) returns map<string|string[]> {
+    map<string|string[]> headers = {};
+    map<()> excludedHeaders = getHeaderNames(excluded); // using map<()> to in lieu of a set
+
+    foreach var name in res.getHeaderNames() {
+        string[] values = checkpanic res.getHeaders(name);
+
+        if excludedHeaders.hasKey(name.toLowerAscii()) {
             continue;
         }
 
