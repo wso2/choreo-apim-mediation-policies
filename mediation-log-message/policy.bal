@@ -50,7 +50,7 @@ public function logRequestMessage(mediation:Context ctx, http:Request req, boole
     }
 
     if Log\ Headers {
-        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, Excluded\ Headers);
+        lRec[FIELD_NAME_HEADERS] = buildRequestHeadersMap(req, Excluded\ Headers);
     }
 
     log:printInfo("", (), (), lRec);
@@ -85,7 +85,7 @@ public function logResponseMessage(mediation:Context ctx, http:Request req, http
     }
 
     if Log\ Headers {
-        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, Excluded\ Headers);
+        lRec[FIELD_NAME_HEADERS] = buildResponseHeadersMap(res, Excluded\ Headers);
     }
 
     log:printInfo("", (), (), lRec);
@@ -131,7 +131,12 @@ public function logFaultMessage(mediation:Context ctx, http:Request req, http:Re
     }
 
     if Log\ Headers {
-        lRec[FIELD_NAME_HEADERS] = buildHeadersMap(req, Excluded\ Headers);
+        if resp is () {
+            // In case response is nil, request hasn't reached the backend, hence logging the request headers.
+            lRec[FIELD_NAME_HEADERS] = buildRequestHeadersMap(req, Excluded\ Headers);
+        } else {
+            lRec[FIELD_NAME_HEADERS] = buildResponseHeadersMap(resp, Excluded\ Headers);
+        }
     }
 
     log:printInfo("", (), (), lRec);
