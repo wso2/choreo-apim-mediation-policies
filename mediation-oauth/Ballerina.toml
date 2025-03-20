@@ -1,0 +1,10 @@
+[package]
+org = "choreo"
+name = "mediation_oauth"
+version = "1.0.0"
+export = ["mediation_oauth"]
+distribution = "2201.3.1"
+keywords = ["choreo-apim-mediation-policy","choreo-apim-mediation-request-flow","choreo-apim-mediation-response-flow","choreo-apim-mediation-fault-flow"]
+
+[build-options]
+observabilityIncluded = true
