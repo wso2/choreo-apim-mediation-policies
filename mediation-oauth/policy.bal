@@ -84,7 +84,7 @@ public function oauthIn(mediation:Context ctx, http:Request req,
 
 @mediation:ResponseFlow
 public function oauthOut(mediation:Context ctx, http:Request req, http:Response response,
-                         string tokenEndpointUrl, string clientId, string clientSecret, string header)
+                         string tokenEndpointUrl, string clientId, string clientSecret, string headerName)
                          returns http:Response|false|error? {
 
     if (response.statusCode == 401) {
@@ -96,7 +96,7 @@ public function oauthOut(mediation:Context ctx, http:Request req, http:Response 
 
 @mediation:FaultFlow
 public function oauthFault(mediation:Context ctx, http:Request req, http:Response? res, http:Response errFlowRes, error e,
-                           string tokenEndpointUrl, string clientId, string clientSecret, string header)
+                           string tokenEndpointUrl, string clientId, string clientSecret, string headerName)
                            returns http:Response|false|error? {
 
     log:printError("OAuth mediation fault occurred", 'error = e);
