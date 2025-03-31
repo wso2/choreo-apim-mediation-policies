@@ -1,10 +1,10 @@
 [package]
 org = "choreo"
-name = "mediation_oauth"
+name = "oauth_mediator"
 version = "1.0.0"
-export = ["mediation_oauth"]
-distribution = "2201.3.1"
-keywords = ["choreo-apim-mediation-policy","choreo-apim-mediation-request-flow","choreo-apim-mediation-response-flow","choreo-apim-mediation-fault-flow"]
+export = ["oauth_mediator"]
+distribution = "2201.5.5"
+keywords = ["choreo-apim-mediation-policy","choreo-apim-mediation-request-flow"]
 
 [build-options]
 observabilityIncluded = true

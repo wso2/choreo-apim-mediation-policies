@@ -2,190 +2,224 @@ import ballerina/http;
 import choreo/mediation;
 import ballerina/time;
 import ballerina/log;
-import ballerina/cache;
+import ballerina/lang.runtime;
+import ballerina/mime;
+import ballerina/lang.regexp;
 
-type OAuthEndpoint record {|
-    string id;
-    string tokenApiUrl;
-    string clientId;
-    string clientSecret;
-|};
+TokenResponse? oauthAccessToken = ();
+http:Client? tokenClient = ();
 
-public type TokenResponse record {|
-    string accessToken;
-    string refreshToken?;
-    string tokenType;
-    int expiresIn;
-    int validTill;
-|};
-
-public class TokenCacheManager {
-    private cache:Cache tokenCache;
-
-    public function init() {
-        self.tokenCache = new (capacity = 100, evictionFactor = 0.2);
+function getTokenClient(string tokenEndpointUrl) returns http:Client|error {
+    if (tokenClient is http:Client) {
+        return <http:Client>tokenClient;
     }
 
-     public function getToken(string id) returns TokenResponse? {
-        any|error cachedItem = self.tokenCache.get(id);
-        if (cachedItem is error) {
-            log:printDebug("No token in cache for ID: " + id);
-            return ();
+    lock {
+        if (tokenClient is http:Client) {
+            return <http:Client>tokenClient;
         }
-        return <TokenResponse>cachedItem;
-    }
 
-    public function putToken(string id, TokenResponse token) {
-        error? result = self.tokenCache.put(id, token);
-        if result is error {
-            log:printError("Failed to cache token", 'error = result);
-        }
-    }
+        http:Client|error tokenClientResult = new (tokenEndpointUrl, {
+            timeout: 120
+        });
 
-    public function removeToken(string id) {
-        error? result = self.tokenCache.invalidate(id);
-        if (result is error) {
-            log:printError("Failed to remove token from cache", 'error = result);
+        if (tokenClientResult is error) {
+            return error("Failed to initialize token client for URL: " + tokenEndpointUrl, tokenClientResult);
+        } else {
+            tokenClient = tokenClientResult;
+            return tokenClientResult;
         }
     }
 }
-
-final TokenCacheManager tokenCacheManager = new TokenCacheManager();
-
-http:Client tokenClient = check new("https://example.com/oauth2/token");
 
 @mediation:RequestFlow
-public function oauthIn(mediation:Context ctx, http:Request req,
-                        string tokenEndpointUrl, string clientId, string clientSecret, string headerName)
+public function oauthIn(mediation:Context ctx,
+        http:Request req,
+        string tokenEndpointUrl,
+        string clientId,
+        string clientSecret,
+        string headerName)
                         returns http:Response|false|error? {
 
-    string endpointId = generateEndpointId(tokenEndpointUrl, clientId);
-    
-    OAuthEndpoint oauthEndpoint = {
+    OauthEndpointConfig oauthEndpointConfig = {
         tokenApiUrl: tokenEndpointUrl,
         clientId: clientId,
-        clientSecret: clientSecret,
-        id: endpointId
+        clientSecret: clientSecret
     };
-    
-    http:Client|error tokenClientResult = new(tokenEndpointUrl);
-    if (tokenClientResult is error) {
-        log:printError("Failed to initialize token client", 'error = tokenClientResult);
-        return error("Failed to initialize token client");
-    }
-    tokenClient = tokenClientResult;
 
-    TokenResponse token = check getValidToken(oauthEndpoint);
-    string authorizationHeader = headerName == "Authorization" ? "Bearer " + token.accessToken : token.accessToken;
-    req.setHeader(headerName, authorizationHeader);
-    
+    TokenResponse|error token = check getValidToken(oauthEndpointConfig);
+    if (token is error) {
+        return error("Failed to get a valid token", 'error = token);
+    }
+
+    string headerValue = string `Bearer ${token.accessToken}`;
+    req.setHeader(headerName, headerValue);
+
     return;
 }
 
-@mediation:ResponseFlow
-public function oauthOut(mediation:Context ctx, http:Request req, http:Response response,
-                         string tokenEndpointUrl, string clientId, string clientSecret, string headerName)
-                         returns http:Response|false|error? {
-
-    if (response.statusCode == 401) {
-        log:printError("Received 401 Unauthorized response");
-        return error("Unauthorized response from backend");
-    }
-    return;
-}
-
-@mediation:FaultFlow
-public function oauthFault(mediation:Context ctx, http:Request req, http:Response? res, http:Response errFlowRes, error e,
-                           string tokenEndpointUrl, string clientId, string clientSecret, string headerName)
-                           returns http:Response|false|error? {
-
-    log:printError("OAuth mediation fault occurred", 'error = e);
-    return errFlowRes;
-}
-
-function getValidToken(OAuthEndpoint oauthEndpoint) returns TokenResponse|error {
-    TokenResponse? cachedToken = tokenCacheManager.getToken(oauthEndpoint.id);
+function isValidToken() returns boolean {
+    TokenResponse? cachedToken = oauthAccessToken;
 
     if (cachedToken is TokenResponse) {
         int currentTimeInSeconds = time:utcNow()[0];
-        int tokenExpiryBuffer = 300; 
+        int tokenExpiryBuffer = 300;
 
         if (cachedToken.validTill - currentTimeInSeconds > tokenExpiryBuffer) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function getValidToken(OauthEndpointConfig oauthEndpointConfig) returns TokenResponse|error {
+    TokenResponse? cachedToken = oauthAccessToken;
+    if (cachedToken is TokenResponse) {
+        if (isValidToken()) {
             return cachedToken;
         }
+    }
 
-        if (cachedToken.refreshToken is string) {
-            TokenResponse|error refreshResult = refreshToken(oauthEndpoint, <string>cachedToken.refreshToken);
+    lock {
+        if (cachedToken is TokenResponse) {
+            if (isValidToken()) {
+                return cachedToken;
+            }
+        }
+
+        if (cachedToken is TokenResponse && cachedToken.refreshToken is string && cachedToken.refreshToken != "") {
+            TokenResponse|error refreshResult = refreshToken(oauthEndpointConfig, <string>cachedToken.refreshToken);
             if (refreshResult is TokenResponse) {
                 return refreshResult;
             }
             log:printError("Token refresh failed. Generating a new token.", 'error = refreshResult);
         }
+
+        TokenResponse|error newToken = generateNewToken(oauthEndpointConfig);
+        if newToken is error {
+            return error("Failed to generate new token", 'error = newToken);
+        }
+        oauthAccessToken = newToken;
+        return newToken;
     }
-    
-    return generateNewToken(oauthEndpoint);
+
 }
 
-function generateNewToken(OAuthEndpoint endpoint) returns TokenResponse|error {
+function generateNewToken(OauthEndpointConfig oauthEndpointConfig) returns TokenResponse|error {
     http:Request tokenReq = new;
     tokenReq.setHeader("Content-Type", "application/x-www-form-urlencoded");
-    
-    string payload = string `grant_type=client_credentials&client_id=${endpoint.clientId}&client_secret=${endpoint.clientSecret}`;
+
+    string authString = oauthEndpointConfig.clientId + ":" + oauthEndpointConfig.clientSecret;
+    string encodedCredentials = (check mime:base64Encode(authString)).toString();
+    string encodedCreds = regexp:replaceAll(re `\s+`, encodedCredentials, "");
+    string authHeader = string `Basic ${encodedCreds}`;
+    tokenReq.setHeader("Authorization", authHeader);
+
+    string payload = "grant_type=client_credentials";
     tokenReq.setTextPayload(payload);
-    
-    TokenResponse token = check requestAndParseToken(tokenReq);
-    tokenCacheManager.putToken(endpoint.id, token);
+
+    TokenResponse|error token = check requestAndParseToken(tokenReq, oauthEndpointConfig.tokenApiUrl);
+    if token is error {
+        return error("Failed to generate new token from " + oauthEndpointConfig.tokenApiUrl, token);
+    }
     return token;
 }
 
-function refreshToken(OAuthEndpoint endpoint, string refreshToken) returns TokenResponse|error {
+function refreshToken(OauthEndpointConfig oauthEndpointConfig, string refreshToken) returns TokenResponse|error {
     if (refreshToken == "") {
         return error("Refresh token is empty");
     }
-
     http:Request tokenReq = new;
     tokenReq.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    string payload = string `grant_type=refresh_token&refresh_token=${refreshToken}&client_id=${endpoint.clientId}&client_secret=${endpoint.clientSecret}`;
+    string authString = oauthEndpointConfig.clientId + ":" + oauthEndpointConfig.clientSecret;
+    string encodedCredentials = (check mime:base64Encode(authString)).toString();
+    string encodedCreds = regexp:replaceAll(re `\s+`, encodedCredentials, "");
+    string authHeader = string `Basic ${encodedCreds}`;
+    tokenReq.setHeader("Authorization", authHeader);
+
+    string payload = string `grant_type=refresh_token&refresh_token=${refreshToken}`;
     tokenReq.setTextPayload(payload);
-    
-    TokenResponse token = check requestAndParseToken(tokenReq);
-    tokenCacheManager.putToken(endpoint.id, token);
+
+    TokenResponse|error token = check requestAndParseToken(tokenReq, oauthEndpointConfig.tokenApiUrl);
+    if token is error {
+        return error("Failed to generate new token from " + oauthEndpointConfig.tokenApiUrl, token);
+    }
     return token;
 }
 
-function requestAndParseToken(http:Request tokenReq) returns TokenResponse|error {
-    http:Response|error tokenRespResult = tokenClient->post("", tokenReq);
-    if (tokenRespResult is error) {
-        return error("Error calling token endpoint: " + tokenRespResult.message());
+function requestAndParseToken(http:Request tokenReq, string tokenEndpointUrl) returns TokenResponse|error {
+    int maxRetries = 3;
+    int retryCount = 0;
+    decimal initialBackoff = 5;
+    http:Response? tokenResp = ();
+    error? lastError = ();
+
+    http:Client|error tokenClientResult = getTokenClient(tokenEndpointUrl);
+    if (tokenClientResult is error) {
+        return error("Failed to initialize token client", 'error = tokenClientResult);
     }
 
-    http:Response tokenResp = tokenRespResult;
+    while retryCount < maxRetries {
+        http:Response|http:ClientError tokenRespResult = tokenClientResult->post("", tokenReq);
 
-    json|error respJson = tokenResp.getJsonPayload();
-    if (respJson is error) {
-        return error("Failed to parse token response: " + respJson.message());
+        if tokenRespResult is http:Response {
+            tokenResp = tokenRespResult;
+            break;
+        } else {
+            if (tokenRespResult is http:IdleTimeoutError || tokenRespResult is http:RemoteServerError) {
+                lastError = tokenRespResult;
+                retryCount += 1;
+                log:printWarn(string `Token request failed (${tokenRespResult.message()}). Retrying ${retryCount}`);
+
+                if retryCount < maxRetries {
+                    decimal backoffTime = initialBackoff * (2 ^ (retryCount - 1));
+                    runtime:sleep(backoffTime);
+                } else {
+                    return error("Error calling token endpoint after maximum retries");
+                }
+            } else {
+                return error("Unexpected error calling token endpoint");
+            }
+        }
+    }
+    if tokenResp is () {
+        return error("Failed to receive a token response after retries", lastError);
     }
 
-    int currentTime = time:utcNow()[0];
-    int expiresIn = check respJson.expires_in;
+    if (tokenResp.statusCode == http:STATUS_OK || tokenResp.statusCode == http:STATUS_CREATED) {
+        json|error respJson = tokenResp.getJsonPayload();
+        if (respJson is error) {
+            return error("Failed to parse token response: " + respJson.message());
+        } else {
+            var accessTokenJson = respJson.access_token;
+            var tokenTypeJson = respJson.token_type;
+            var expiresInJson = respJson.expires_in;
 
-    TokenResponse token = {
-        accessToken: check respJson.access_token,
-        tokenType: check respJson.token_type,
-        expiresIn: expiresIn,
-        validTill: currentTime + expiresIn
-    };
+            if (accessTokenJson is ()) || (tokenTypeJson is ()) || (expiresInJson is ()) {
+                return error("Missing required fields in token response");
+            }
 
-    if respJson.refresh_token is string && respJson.refresh_token != ""{
-        token.refreshToken = check respJson.refresh_token;
+            int currentTime = time:utcNow()[0];
+            int expiresIn = check respJson.expires_in;
+
+            TokenResponse token = {
+                accessToken: check respJson.access_token,
+                tokenType: check respJson.token_type,
+                expiresIn: expiresIn,
+                validTill: currentTime + expiresIn
+            };
+
+            // json|error refreshTokenJson = check respJson.refresh_token;
+            // if (refreshTokenJson is json && refreshTokenJson != "") {
+            //     token.refreshToken = check refreshTokenJson;
+            // }
+            return token;
+        }
     } else {
-        log:printDebug("No refresh_token in response");
+        log:printInfo("Token endpoint returned non-200 status.", 'error = lastError);
+        return error("Token endpoint returned non-200 status.");
+
     }
 
-    return token;
-}
-
-function generateEndpointId(string tokenUrl, string clientId) returns string {
-    return string `${tokenUrl}:${clientId}`;
 }
