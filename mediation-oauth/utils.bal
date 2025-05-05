@@ -20,6 +20,8 @@ import ballerina/lang.regexp;
 import ballerina/mime;
 import ballerina/lang.runtime;
 
+const MAX_RETRIES = 5;
+const INITIAL_BACKOFF = 5;
 function getTokenClient(string tokenEndpointUrl) returns http:Client|error {
     if (tokenClient is http:Client) {
         return <http:Client>tokenClient;
@@ -134,9 +136,7 @@ function refreshToken(OauthEndpointConfig oauthEndpointConfig, string refreshTok
 }
 
 function requestAndParseToken(http:Request tokenReq, string tokenEndpointUrl) returns TokenResponse|error {
-    int maxRetries = 3;
     int retryCount = 0;
-    decimal initialBackoff = 5;
     http:Response? tokenResp = ();
     error? lastError = ();
 
@@ -145,7 +145,7 @@ function requestAndParseToken(http:Request tokenReq, string tokenEndpointUrl) re
         return error("Failed to initialize token client", 'error = tokenClientResult);
     }
 
-    while retryCount < maxRetries {
+    while retryCount < MAX_RETRIES {
         http:Response|http:ClientError tokenRespResult = tokenClientResult->post("", tokenReq);
 
         if tokenRespResult is http:Response {
@@ -157,8 +157,8 @@ function requestAndParseToken(http:Request tokenReq, string tokenEndpointUrl) re
                 retryCount += 1;
                 log:printWarn(string `Token request failed (${tokenRespResult.message()}). Retrying ${retryCount}`);
 
-                if retryCount < maxRetries {
-                    decimal backoffTime = initialBackoff * (2 ^ (retryCount - 1));
+                if retryCount < MAX_RETRIES {
+                    decimal backoffTime = <decimal>(INITIAL_BACKOFF * (2 ^ (retryCount - 1)));
                     runtime:sleep(backoffTime);
                 } else {
                     return error("Error calling token endpoint after maximum retries");

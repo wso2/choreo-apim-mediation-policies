@@ -23,7 +23,7 @@ service /token on new http:Listener(9090) {
 
 configurable string testClientId = "71z_XwvIxg6oYpDifjfe2jwIdI74a";
 configurable string testClientSecret = "bqBe_HZGBjklryRfshysAzvn_fUJcywyo4mmhlk5Zg4a";
-configurable string testHeaderName = "Authorization";
+configurable string testHeaderName = "TestAuthHeader";
 
 OauthEndpointConfig endpoint = {
     tokenApiUrl: mockTokenEndpoint,
@@ -58,7 +58,7 @@ function testOAuthInSuccess() returns error? {
 
     test:assertTrue(headerValue is string, "Header should be present");
 
-    if (headerValue is string && testHeaderName == "Authorization") {
+    if (headerValue is string && testHeaderName == "TestAuthHeader") {
         test:assertTrue(headerValue.startsWith("Bearer "), "Header should contain a valid token");
     }
 
