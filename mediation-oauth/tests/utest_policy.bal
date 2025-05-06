@@ -1,6 +1,7 @@
-import ballerina/test;
 import ballerina/http;
+import ballerina/test;
 import ballerina/time;
+
 import choreo/mediation;
 
 final string mockTokenEndpoint = string `http://localhost:9090/token`;
@@ -45,12 +46,12 @@ function testOAuthInSuccess() returns error? {
     http:Request req = new;
 
     http:Response|error|false? result = oauthIn(
-        ctx,
-        req,
-        mockTokenEndpoint,
-        testClientId,
-        testClientSecret,
-        testHeaderName
+            ctx,
+            req,
+            mockTokenEndpoint,
+            testClientId,
+            testClientSecret,
+            testHeaderName
     );
 
     test:assertTrue(result is (), "Expected nil response");

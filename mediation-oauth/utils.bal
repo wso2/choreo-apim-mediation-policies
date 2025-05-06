@@ -13,15 +13,18 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+
 import ballerina/http;
-import ballerina/time;
-import ballerina/log;
 import ballerina/lang.regexp;
-import ballerina/mime;
 import ballerina/lang.runtime;
+import ballerina/log;
+import ballerina/mime;
+import ballerina/time;
 
 const MAX_RETRIES = 5;
 const INITIAL_BACKOFF = 5;
+const TOKEN_EXPIRY_BUFFER = 300;
+
 function getTokenClient(string tokenEndpointUrl) returns http:Client|error {
     if (tokenClient is http:Client) {
         return <http:Client>tokenClient;
@@ -49,10 +52,7 @@ function isValidToken() returns boolean {
     TokenResponse? cachedToken = oauthAccessToken;
 
     if (cachedToken is TokenResponse) {
-        int currentTimeInSeconds = time:utcNow()[0];
-        int tokenExpiryBuffer = 300;
-
-        if (cachedToken.validTill - currentTimeInSeconds > tokenExpiryBuffer) {
+        if (cachedToken.validTill - time:utcNow()[0] > TOKEN_EXPIRY_BUFFER) {
             return true;
         }
     }
@@ -188,23 +188,23 @@ function requestAndParseToken(http:Request tokenReq, string tokenEndpointUrl) re
             int currentTime = time:utcNow()[0];
             int expiresIn = check respJson.expires_in;
 
-            TokenResponse token = {
+            TokenResponse tokenRes = {
                 accessToken: check respJson.access_token,
                 tokenType: check respJson.token_type,
                 expiresIn: expiresIn,
                 validTill: currentTime + expiresIn
             };
 
-            // json|error refreshTokenJson = check respJson.refresh_token;
-            // if (refreshTokenJson is json && refreshTokenJson != "") {
-            //     token.refreshToken = check refreshTokenJson;
-            // }
-            return token;
+            json|error refreshTokenJson = check respJson.refresh_token;
+            if (refreshTokenJson is json && refreshTokenJson != "") {
+                tokenRes.refreshToken = check refreshTokenJson;
+            }
+
+            return tokenRes;
         }
     } else {
         log:printInfo("Token endpoint returned non-200 status.", 'error = lastError);
         return error("Token endpoint returned non-200 status.");
-
     }
 
 }
