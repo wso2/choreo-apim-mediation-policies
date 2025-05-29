@@ -26,7 +26,7 @@ public function oauthIn(mediation:Context ctx,
         string tokenEndpointUrl,
         string clientId,
         string clientSecret,
-        string headerName)
+        string headerName="Authorization")
                         returns http:Response|false|error? {
 
     OauthEndpointConfig oauthEndpointConfig = {
@@ -35,9 +35,9 @@ public function oauthIn(mediation:Context ctx,
         clientSecret: clientSecret
     };
 
-    TokenResponse|error token = check getValidToken(oauthEndpointConfig);
+    TokenResponse|error token = check getToken(oauthEndpointConfig);
     if (token is error) {
-        return error("Failed to get a valid token", 'error = token);
+        return error("Failed to get a token", 'error = token);
     }
 
     string headerValue = string `Bearer ${token.accessToken}`;

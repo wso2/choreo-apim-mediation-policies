@@ -83,8 +83,8 @@ function testOAuthInSuccess() returns error? {
 
 @test:Config {}
 function testGetValidTokenWithCache() returns error? {
-    TokenResponse token1 = check getValidToken(endpoint);
-    TokenResponse token2 = check getValidToken(endpoint);
+    TokenResponse token1 = check getToken(endpoint);
+    TokenResponse token2 = check getToken(endpoint);
     test:assertEquals(token2, token1, "Cached token mismatch");
 }
 
@@ -108,7 +108,7 @@ function testGenerateNewTokenWhenRemainFiveMin() returns error? {
     };
 
     oauthAccessToken = token;
-    TokenResponse token1 = check getValidToken(endpoint);
+    TokenResponse token1 = check getToken(endpoint);
     test:assertNotEquals(token1.accessToken, token.accessToken, "Cached token and generated tocken are matched");
 }
 

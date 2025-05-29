@@ -59,7 +59,7 @@ function isValidToken() returns boolean {
     return false;
 }
 
-function getValidToken(OauthEndpointConfig oauthEndpointConfig) returns TokenResponse|error {
+function getToken(OauthEndpointConfig oauthEndpointConfig) returns TokenResponse|error {
     TokenResponse? cachedToken = oauthAccessToken;
     if (cachedToken is TokenResponse) {
         if (isValidToken()) {
@@ -84,12 +84,12 @@ function getValidToken(OauthEndpointConfig oauthEndpointConfig) returns TokenRes
 
         TokenResponse|error newToken = generateNewToken(oauthEndpointConfig);
         if newToken is error {
+            log:printError("Failed to generate new token", 'error = newToken);
             return error("Failed to generate new token", 'error = newToken);
         }
         oauthAccessToken = newToken;
         return newToken;
     }
-
 }
 
 function generateNewToken(OauthEndpointConfig oauthEndpointConfig) returns TokenResponse|error {
@@ -130,7 +130,7 @@ function refreshToken(OauthEndpointConfig oauthEndpointConfig, string refreshTok
 
     TokenResponse|error token = check requestAndParseToken(tokenReq, oauthEndpointConfig.tokenApiUrl);
     if token is error {
-        return error("Failed to generate new token from " + oauthEndpointConfig.tokenApiUrl, token);
+        return error("Failed to refresh the token " + oauthEndpointConfig.tokenApiUrl, token);
     }
     return token;
 }
@@ -194,11 +194,6 @@ function requestAndParseToken(http:Request tokenReq, string tokenEndpointUrl) re
                 expiresIn: expiresIn,
                 validTill: currentTime + expiresIn
             };
-
-            json|error refreshTokenJson = check respJson.refresh_token;
-            if (refreshTokenJson is json && refreshTokenJson != "") {
-                tokenRes.refreshToken = check refreshTokenJson;
-            }
 
             return tokenRes;
         }
