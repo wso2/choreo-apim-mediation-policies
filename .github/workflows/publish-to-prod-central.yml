@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Install Ballerina
         run: |
-          BAL_VERSION=2201.3.1
+          BAL_VERSION=2201.5.5
           BAL_INSTALLER=ballerina-$BAL_VERSION-swan-lake-linux-x64.deb
           wget https://dist.ballerina.io/downloads/$BAL_VERSION/$BAL_INSTALLER
           sudo dpkg -i $BAL_INSTALLER
