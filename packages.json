@@ -1,38 +1,42 @@
 [
     {
         "name": "mediation-add-header",
-        "version": "1.0.0"
+        "version": "2.0.0"
     },
     {
         "name": "mediation-json-to-xml",
-        "version": "1.0.0"
+        "version": "2.0.0"
     },
     {
         "name": "mediation-rewrite-resource-path",
-        "version": "1.0.0"
+        "version": "2.0.0"
     },
     {
         "name": "mediation-xml-to-json",
-        "version": "1.0.0"
+        "version": "2.0.0"
     },
     {
         "name": "mediation-set-header",
-        "version": "1.0.0"
+        "version": "2.0.0"
     },
     {
         "name": "mediation-remove-header",
-        "version": "1.0.0"
+        "version": "2.0.0"
     },
     {
         "name": "mediation-add-query-param",
-        "version": "1.0.0"
+        "version": "2.0.0"
     },
     {
         "name": "mediation-remove-query-param",
-        "version": "1.0.0"
+        "version": "2.0.0"
     },
     {
         "name": "mediation-log-message",
-        "version": "1.0.2"
+        "version": "2.0.1"
+    },
+    {
+        "name": "mediation-oauth",
+        "version": "0.0.1"
     }
 ]
