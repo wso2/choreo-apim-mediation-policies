@@ -38,5 +38,9 @@
     {
         "name": "mediation-oauth",
         "version": "1.0.0"
+    },
+    {
+        "name": "ratelimit-ai-token-based-ratelimit",
+        "version": "0.0.1"
     }
 ]
