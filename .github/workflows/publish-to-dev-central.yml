@@ -20,6 +20,7 @@ jobs:
       - name: Publish bala to dev Central
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BAL_DEV_CENTRAL_TOKEN }}
+          BALLERINA_DEV_CENTRAL: true
         run: |
           BALA_URL=${{ github.event.inputs.released-asset }}
           wget $BALA_URL
