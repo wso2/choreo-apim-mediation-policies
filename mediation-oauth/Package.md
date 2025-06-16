@@ -1,4 +1,4 @@
-# OAuth Mediation Policy
+# Outbound OAuth
 
 ## Overview
 This policy provides automatic OAuth 2.0 Client Credentials flow implementation for securing API calls. It handles token acquisition, caching, refreshing, and adding appropriate authorization headers to requests.
