@@ -1,7 +1,7 @@
 [package]
 org = "choreo"
 name = "oauth_mediator"
-version = "1.0.0"
+version = "1.0.1"
 export = ["oauth_mediator"]
 distribution = "2201.5.5"
 keywords = ["choreo-apim-mediation-policy","choreo-apim-mediation-request-flow"]
