@@ -41,6 +41,6 @@
     },
     {
         "name": "ratelimit-ai-token-based-ratelimit",
-        "version": "0.0.1"
+        "version": "1.0.0"
     }
 ]
