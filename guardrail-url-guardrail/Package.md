@@ -6,7 +6,7 @@ This policy provides the capability to perform URL validity checks on incoming o
 
 ## Usage
 
-This will be available to select when attaching mediation policies to an egress AI Proxy Component in Choreo/Bijira. The following policy parameters are available:
+This will be available to select when attaching mediation policies to an egress AI proxy component. The following policy parameters are available:
 
 - `Guardrail Name`: The name of the guardrail policy. This will be used for tracking purposes.
 - `Perform DNS Lookup`: If enabled, a DNS lookup will be performed to validate the extracted URLs. If disabled, a connection attempt will be made instead.

@@ -6,7 +6,7 @@ This policy provides the capability to perform sentence count-based validation o
 
 ## Usage
 
-This will be available to select when attaching mediation policies to an egress AI Proxy Component in Choreo/Bijira. The following policy parameters are available:
+This will be available to select when attaching mediation policies to an egress AI proxy component. The following policy parameters are available:
 
 - `Guardrail Name`: The name of the guardrail policy. This will be used for tracking purposes.
 - `Minimum Sentence Count`: The minimum number of sentences the content must contain.
