@@ -19,14 +19,14 @@ import choreo/mediation;
 
 @mediation:RequestFlow
 public function contentLengthGuardrail_In(mediation:Context ctx, http:Request req, string Guardrail\ Name, int Minimum\ Content\ Length, 
-int Maximum\ Content\ Length, string JSON\ Path, boolean Invert\ the\ Guardrail\ Decision, boolean Show\ Guardrail\ Assessment) 
+int Maximum\ Content\ Length, string JSON\ Path = "", boolean Invert\ the\ Guardrail\ Decision = false, boolean Show\ Guardrail\ Assessment = false) 
                                 returns http:Response|false|error|() {
     return;
 }
 
 @mediation:ResponseFlow
 public function contentLengthGuardrail_Out(mediation:Context ctx, http:Request req, http:Response res, string Guardrail\ Name, int Minimum\ Content\ Length, 
-int Maximum\ Content\ Length, string JSON\ Path, boolean Invert\ the\ Guardrail\ Decision, boolean Show\ Guardrail\ Assessment) 
+int Maximum\ Content\ Length, string JSON\ Path = "", boolean Invert\ the\ Guardrail\ Decision = false, boolean Show\ Guardrail\ Assessment = false) 
                                 returns http:Response|false|error|() {
     return;
 }

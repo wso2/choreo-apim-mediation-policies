@@ -19,14 +19,14 @@ import choreo/mediation;
 
 @mediation:RequestFlow
 public function wordCountGuardrail_In(mediation:Context ctx, http:Request req, string Guardrail\ Name, int Minimum\ Word\ Count, 
-int Maximum\ Word\ Count, string JSON\ Path, boolean Invert\ the\ Guardrail\ Decision, boolean Show\ Guardrail\ Assessment) 
+int Maximum\ Word\ Count, string JSON\ Path = "", boolean Invert\ the\ Guardrail\ Decision = false, boolean Show\ Guardrail\ Assessment = false) 
                                 returns http:Response|false|error|() {
     return;
 }
 
 @mediation:ResponseFlow
 public function wordCountGuardrail_Out(mediation:Context ctx, http:Request req, http:Response res, string Guardrail\ Name, int Minimum\ Word\ Count, 
-int Maximum\ Word\ Count, string JSON\ Path, boolean Invert\ the\ Guardrail\ Decision, boolean Show\ Guardrail\ Assessment) 
+int Maximum\ Word\ Count, string JSON\ Path = "", boolean Invert\ the\ Guardrail\ Decision = false, boolean Show\ Guardrail\ Assessment = false) 
                                 returns http:Response|false|error|() {
     return;
 }
