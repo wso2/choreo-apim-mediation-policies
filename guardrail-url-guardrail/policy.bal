@@ -19,14 +19,14 @@ import choreo/mediation;
 
 @mediation:RequestFlow
 public function urlGuardrail_In(mediation:Context ctx, http:Request req, string Guardrail\ Name, boolean Perform\ DNS\ Lookup, 
-int Connection\ Timeout, string JSON\ Path, boolean Invert\ the\ Guardrail\ Decision, boolean Show\ Guardrail\ Assessment) 
+int Connection\ Timeout, string JSON\ Path, boolean Show\ Guardrail\ Assessment) 
                                 returns http:Response|false|error|() {
     return;
 }
 
 @mediation:ResponseFlow
 public function urlGuardrail_Out(mediation:Context ctx, http:Request req, http:Response res, string Guardrail\ Name, boolean Perform\ DNS\ Lookup, 
-int Connection\ Timeout, string JSON\ Path, boolean Invert\ the\ Guardrail\ Decision, boolean Show\ Guardrail\ Assessment) 
+int Connection\ Timeout, string JSON\ Path, boolean Show\ Guardrail\ Assessment) 
                                 returns http:Response|false|error|() {
     return;
 }
