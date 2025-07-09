@@ -42,5 +42,29 @@
     {
         "name": "ratelimit-ai-token-based-ratelimit",
         "version": "1.0.0"
+    },
+    {
+        "name": "guardrail-regex-guardrail",
+        "version": "0.0.1"
+    },
+    {
+        "name": "guardrail-word-count-guardrail",
+        "version": "0.0.1"
+    },
+    {
+        "name": "guardrail-sentence-count-guardrail",
+        "version": "0.0.1"
+    },
+    {
+        "name": "guardrail-content-length-guardrail",
+        "version": "0.0.1"
+    },
+    {
+        "name": "guardrail-url-guardrail",
+        "version": "0.0.1"
+    },
+    {
+        "name": "guardrail-azure-content-safety-content-moderation",
+        "version": "0.0.1"
     }
 ]
