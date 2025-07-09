@@ -6,7 +6,7 @@ This policy provides the capability to integrate Azure Content Safety Content Mo
 
 ## Usage
 
-This will be available to select when attaching mediation policies to an egress AI Proxy Component. The following policy parameters are available:
+This will be available to select when attaching mediation policies to an egress AI proxy component. The following policy parameters are available:
 
 - `Guardrail Name`: The name of the guardrail policy. This will be used for tracking purposes.
 - `Azure Content Safety Endpoint`: The endpoint URL of the Azure Content Safety service.
