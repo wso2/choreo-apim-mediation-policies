@@ -40,10 +40,6 @@
         "version": "1.0.0"
     },
     {
-        "name": "ratelimit-ai-token-based-ratelimit",
-        "version": "1.0.0"
-    },
-    {
         "name": "guardrail-regex-guardrail",
         "version": "0.0.1"
     },
