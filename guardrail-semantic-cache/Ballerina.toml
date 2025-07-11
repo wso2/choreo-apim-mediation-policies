@@ -1,0 +1,10 @@
+[package]
+org = "choreo"
+name = "guardrail.semantic_cache"
+version = "1.0.0"
+export = ["guardrail.semantic_cache"]
+distribution = "2201.5.5"
+keywords=["choreo-apim-mediation-policy", "choreo-apim-egress-ai", "choreo-apim-mediation-request-flow", "choreo-apim-mediation-response-flow"]
+
+[build-options]
+observabilityIncluded = true
