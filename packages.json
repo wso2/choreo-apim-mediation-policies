@@ -62,5 +62,9 @@
     {
         "name": "guardrail-azure-content-safety-content-moderation",
         "version": "0.0.1"
+    },
+    {
+        "name": "guardrail-semantic-cache",
+        "version": "0.0.1"
     }
 ]
