@@ -15,7 +15,7 @@ Embedding Provider Configurations
 - `Embedding Upstream URL`: Endpoint URL for the emedding generation
 
 Vector DB Configurations
-- `Dimentions`: The desired dimensionality for the vectors
+- `Dimensions`: The desired dimensionality for the vectors
 - `Threshold`: The default similarity threshold for accepting semantic search results.
 - `Vector Store`: Which vector database driver to use(Redis or Milvus)
 - `Host`: A string representing the databse host.
