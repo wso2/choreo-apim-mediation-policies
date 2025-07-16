@@ -6,7 +6,7 @@ This policy provides the capability to integrate with AWS Bedrock Guardrails to 
 
 ## Usage
 
-This will be available to select when attaching mediation policies to an egress AI Proxy Component. The following policy parameters are available:
+This will be available to select when attaching mediation policies to an egress AI proxy component. The following policy parameters are available:
 
 - `Guardrail Name`: The name of the guardrail policy. This will be used for tracking purposes.
 - `AWS Guardrail ID`: The ID of the AWS Bedrock Guardrail resource.
