@@ -2,7 +2,7 @@
 
 ## Overview
 
-This policy provides the capability to integrate with AWS Bedrock Guardrails to enable real-time content safety validation and PII protection for AI applications. Through the configured Bedrock Guardrail, it can detect and block harmful content (hate speech, sexual content, self-harm, violence) and mask or redact personally identifiable information in both request and response payloads. This integration helps ensure AI applications meet safety standards and compliance requirements while protecting against malicious prompt injection attacks.
+This policy provides the capability to integrate with AWS Bedrock Guardrails to enable real-time content safety validation and PII protection for AI applications. Through the configured Bedrock Guardrail, it can detect and block harmful content (hate speech, sexual content, self-harm, violence) and mask or redact Personally Identifiable Information (PII) in both request and response payloads. This integration helps ensure AI applications meet safety standards and compliance requirements while protecting against malicious prompt injection attacks.
 
 ## Usage
 
