@@ -18,7 +18,7 @@ import ballerina/http;
 import choreo/mediation;
 
 @mediation:RequestFlow
-public function urlGuardrail_In(mediation:Context ctx, http:Request req, string Guardrail\ Name, string Azure\ Content\ Safety\ Endpoint, 
+public function azureContentSafetyContentModeration_In(mediation:Context ctx, http:Request req, string Guardrail\ Name, string Azure\ Content\ Safety\ Endpoint, 
 string Azure\ Content\ Safety\ Key, int Hate\ Severity\ Level = -1, int Sexual\ Severity\ Level = -1, int Self\ Harm\ Severity\ Level = -1, 
 int Violence\ Severity\ Level = -1, string JSON\ Path = "", boolean Passthrough\ On\ Error = false, boolean Show\ Guardrail\ Assessment = false) 
                                 returns http:Response|false|error|() {
@@ -26,7 +26,7 @@ int Violence\ Severity\ Level = -1, string JSON\ Path = "", boolean Passthrough\
 }
 
 @mediation:ResponseFlow
-public function urlGuardrail_Out(mediation:Context ctx, http:Request req, http:Response res, string Guardrail\ Name, string Azure\ Content\ Safety\ Endpoint, 
+public function azureContentSafetyContentModeration_Out(mediation:Context ctx, http:Request req, http:Response res, string Guardrail\ Name, string Azure\ Content\ Safety\ Endpoint, 
 string Azure\ Content\ Safety\ Key, int Hate\ Severity\ Level = -1, int Sexual\ Severity\ Level = -1, int Self\ Harm\ Severity\ Level = -1, 
 int Violence\ Severity\ Level = -1, string JSON\ Path = "", boolean Passthrough\ On\ Error = false, boolean Show\ Guardrail\ Assessment = false) 
                                 returns http:Response|false|error|() {

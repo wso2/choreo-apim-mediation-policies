@@ -66,5 +66,9 @@
     {
         "name": "guardrail-semantic-cache",
         "version": "0.0.1"
+    },
+    {
+        "name": "guardrail-aws-bedrock-guardrail",
+        "version": "0.0.1"
     }
 ]

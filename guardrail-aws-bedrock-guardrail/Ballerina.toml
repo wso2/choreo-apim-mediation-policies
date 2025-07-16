@@ -1,0 +1,10 @@
+[package]
+org = "choreo"
+name = "guardrail.aws_bedrock_guardrail"
+version = "1.0.0"
+export = ["guardrail.aws_bedrock_guardrail"]
+distribution = "2201.5.5"
+keywords = ["choreo-apim-mediation-policy","choreo-apim-mediation-request-flow","choreo-apim-mediation-response-flow","choreo-apim-egress-ai"]
+
+[build-options]
+observabilityIncluded = true
