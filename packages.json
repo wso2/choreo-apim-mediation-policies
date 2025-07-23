@@ -41,34 +41,34 @@
     },
     {
         "name": "guardrail-regex-guardrail",
-        "version": "0.0.1"
+        "version": "1.0.0"
     },
     {
         "name": "guardrail-word-count-guardrail",
-        "version": "0.0.1"
+        "version": "1.0.0"
     },
     {
         "name": "guardrail-sentence-count-guardrail",
-        "version": "0.0.1"
+        "version": "1.0.0"
     },
     {
         "name": "guardrail-content-length-guardrail",
-        "version": "0.0.1"
+        "version": "1.0.0"
     },
     {
         "name": "guardrail-url-guardrail",
-        "version": "0.0.1"
+        "version": "1.0.0"
     },
     {
         "name": "guardrail-azure-content-safety-content-moderation",
-        "version": "0.0.1"
+        "version": "1.0.0"
     },
     {
         "name": "guardrail-semantic-cache",
-        "version": "0.0.1"
+        "version": "1.0.0"
     },
     {
         "name": "guardrail-aws-bedrock-guardrail",
-        "version": "0.0.1"
+        "version": "1.0.0"
     }
 ]
