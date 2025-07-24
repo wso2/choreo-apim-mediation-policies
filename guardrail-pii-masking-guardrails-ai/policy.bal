@@ -18,14 +18,14 @@ import ballerina/http;
 import choreo/mediation;
 
 @mediation:RequestFlow
-public function piiMaskingRegex_In(mediation:Context ctx, http:Request req, string Guardrail\ Name, string PII\ Entities, string JSON\ Path = "",
+public function piiMaskingGuardrailsAI_In(mediation:Context ctx, http:Request req, string Guardrail\ Name, string PII\ Entities, string JSON\ Path = "",
 boolean Redact\ PII = false) 
                                 returns http:Response|false|error|() {
     return;
 }
 
 @mediation:ResponseFlow
-public function piiMaskingRegex_Out(mediation:Context ctx, http:Request req, http:Response res, string Guardrail\ Name, string PII\ Entities, string JSON\ Path = "",
+public function piiMaskingGuardrailsAI_Out(mediation:Context ctx, http:Request req, http:Response res, string Guardrail\ Name, string PII\ Entities, string JSON\ Path = "",
 boolean Redact\ PII = false) 
                                 returns http:Response|false|error|() {
     return;
