@@ -74,5 +74,9 @@
     {
         "name": "guardrail-pii-masking-guardrails-ai",
         "version": "0.0.1"
+    },
+    {
+        "name": "guardrail-pii-masking-regex",
+        "version": "0.0.1"
     }
 ]
