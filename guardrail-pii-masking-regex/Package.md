@@ -2,7 +2,7 @@
 
 ## Overview
 
-This package provides a mediation policy for Choreo API Manager that allows you to mask Personally Identifiable Information (PII) in API requests and responses using regular expressions. It is designed to help protect sensitive data by masking it before it reaches the AI Proxy Component.
+This package provides a mediation policy for Choreo API Manager that allows you to mask Personally Identifiable Information (PII) in API requests and responses using regular expressions. It is designed to help protect sensitive data by masking it before it reaches the AI proxy component.
 
 ## Usage
 
