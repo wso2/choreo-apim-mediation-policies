@@ -46,7 +46,7 @@ public function addHeader_In(mediation:Context ctx, http:Request req, string Cer
     } else {
         string|error clientCertString = url:decode(incomingCertString, "UTF-8");
         if (clientCertString is error) {
-            log:printDebug("Invalid URL-encoded certificate in x-client-cert-x509 header");
+            log:printError("Invalid URL-encoded certificate in x-client-cert-x509 header");
             return generateResponse(AUTHENTICATION_FAILURE_MESSAGE, http:STATUS_UNAUTHORIZED);
         }
         certificates:ValidationResponse resp = certificates:CertificateValidator_verifyCertificates(savedCertString, clientCertString);
