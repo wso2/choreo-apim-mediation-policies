@@ -40,6 +40,10 @@
         "version": "1.0.0"
     },
     {
+        "name": "mediation-authenticator-mtls",
+        "version": "1.0.0"
+    },
+    {
         "name": "guardrail-regex-guardrail",
         "version": "1.0.0"
     },

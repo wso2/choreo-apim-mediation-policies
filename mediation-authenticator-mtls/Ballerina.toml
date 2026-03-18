@@ -1,0 +1,12 @@
+[package]
+org = "choreo"
+name = "mediation.authenticator_mtls"
+version = "1.0.0"
+distribution = "2201.12.8"
+keywords = ["choreo-apim-mediation-policy", "choreo-apim-mediation-request-flow"]
+
+[build-options]
+observabilityIncluded = true
+
+[[platform.java21.dependency]]
+path = "libs/certificate-validator.jar"
