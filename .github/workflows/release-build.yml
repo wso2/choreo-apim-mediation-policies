@@ -6,7 +6,7 @@ on:
 permissions: write-all
 
 env:
-  BAL_VERSION: 2201.5.5
+  BAL_VERSION: 2201.12.8
 
 jobs:
   rc-build-on-dev-central:
