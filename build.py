@@ -131,7 +131,7 @@ def derive_bala_name(bal_toml):
     org = bal_toml['package']['org']
     pkg = bal_toml['package']['name']
     ver = bal_toml['package']['version']
-    return f'{org}-{pkg}-any-{ver}.bala'
+    return f'{org}-{pkg}-java21-{ver}.bala'
 
 
 if len(sys.argv) < 2:
