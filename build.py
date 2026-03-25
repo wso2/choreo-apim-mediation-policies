@@ -125,6 +125,7 @@ def build_and_push_to_central(project_name, bal_toml):
 
 
 def get_bala_path(project_name, bal_toml):
+    print(f"INFO: Looking for .bala file in project: {project_name}")
     bala_dir = os.path.join(project_name, 'target', 'bala')
     bala_pattern = derive_bala_pattern(bal_toml)
     matching_files = glob.glob(os.path.join(bala_dir, bala_pattern))
@@ -134,6 +135,8 @@ def get_bala_path(project_name, bal_toml):
 
     if len(matching_files) > 1:
         raise ValueError(f'Multiple .bala files found matching pattern: {bala_pattern} in {bala_dir}')
+
+    print(f"INFO: Found .bala file: {matching_files[0]}")
 
     return matching_files[0]
 
