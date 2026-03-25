@@ -18,6 +18,7 @@ import json
 import os
 import sys
 import enum
+import glob
 
 import toml
 import semantic_version
@@ -124,14 +125,24 @@ def build_and_push_to_central(project_name, bal_toml):
 
 
 def get_bala_path(project_name, bal_toml):
-    return os.path.join(project_name, 'target', 'bala', derive_bala_name(bal_toml))
+    bala_dir = os.path.join(project_name, 'target', 'bala')
+    bala_pattern = derive_bala_pattern(bal_toml)
+    matching_files = glob.glob(os.path.join(bala_dir, bala_pattern))
+
+    if not matching_files:
+        raise FileNotFoundError(f'No .bala file found matching pattern: {bala_pattern} in {bala_dir}')
+
+    if len(matching_files) > 1:
+        raise ValueError(f'Multiple .bala files found matching pattern: {bala_pattern} in {bala_dir}')
+
+    return matching_files[0]
 
 
-def derive_bala_name(bal_toml):
+def derive_bala_pattern(bal_toml):
     org = bal_toml['package']['org']
     pkg = bal_toml['package']['name']
     ver = bal_toml['package']['version']
-    return f'{org}-{pkg}-any-{ver}.bala'
+    return f'{org}-{pkg}-*-{ver}.bala'
 
 
 if len(sys.argv) < 2:
